@@ -33,7 +33,7 @@ rechimizer --name 'Sample' - - < input.fasta > output.fasta
 
 ## Benchmark
 
-To evaluate the performance of two solutions for processing DNA sequences, we utilized `hyperfine` to compare an AWK-based solution against the `rechimizer` binary.
+To evaluate the performance of two solutions for processing DNA sequences, we utilized [`hyperfine`](https://github.com/sharkdp/hyperfine) to compare an AWK-based solution against the `rechimizer` binary.
 
 ### Test data
 
@@ -57,5 +57,5 @@ awk -v numSeq=500000 'BEGIN{
     }
 }' > big.fasta
 ```
-The size of the file is ~700MB.
+The size of the file is ~760MB.
 
