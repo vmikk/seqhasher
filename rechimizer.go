@@ -14,10 +14,15 @@ import (
 	"github.com/shenwei356/bio/seqio/fastx"
 )
 
+// Define a variable for the `--headersonly` flag
+var headersOnly bool
+
 func main() {
 	nameFlag := flag.String("name", "", "Optional text to replace input file name in the header")
+	headersOnlyFlag := flag.Bool("headersonly", false, "If enabled, output only sequence headers")
 	flag.Parse()
-	nonFlagArgs := flag.Args() // Get non-flag arguments
+	headersOnly = *headersOnlyFlag // Set the package-level variable based on the flag's value
+	nonFlagArgs := flag.Args()     // Get non-flag arguments
 
 	if len(nonFlagArgs) < 1 || len(nonFlagArgs) > 2 || (*nameFlag == "" && len(nonFlagArgs) == 1) {
 		fmt.Println("Usage: rechimizer [--name user_text] input_file [output_file]")
@@ -28,6 +33,7 @@ func main() {
 		fmt.Println("  input_file   - Path to the input FASTA file or '-' for stdin.")
 		fmt.Println("  output_file  - Path to the output file or '-' for stdout. Optional; defaults to stdout if not provided.")
 		fmt.Println("  --name       - Optional. Replaces the input file name in the header with the specified text.")
+		fmt.Println("  --headersonly - Optional. Outputs only sequence headers.")
 		fmt.Println("\nExamples:")
 		fmt.Println("  rechimizer input.fasta output.fasta")
 		fmt.Println("  rechimizer --name 'Sample' - - < input.fasta > output.fasta")
@@ -102,9 +108,18 @@ func processSequences(input io.Reader, output io.Writer, inputFileName string) {
 		sha1sum := sha1.Sum(seq)
 		modifiedHeader := fmt.Sprintf("%s;%x;%s", inputFileName, sha1sum, record.Name)
 
-		if _, err := fmt.Fprintf(writer, ">%s\n%s\n", modifiedHeader, seq); err != nil {
-			log.Printf("Error writing record: %v", err)
-			continue
+		if headersOnly {
+			// Output only the header, without the '>' sign, if `--headersonly` is enabled
+			if _, err := fmt.Fprintf(writer, "%s\n", modifiedHeader); err != nil {
+				log.Printf("Error writing header: %v", err)
+				continue
+			}
+		} else {
+			// Output the full record
+			if _, err := fmt.Fprintf(writer, ">%s\n%s\n", modifiedHeader, seq); err != nil {
+				log.Printf("Error writing record: %v", err)
+				continue
+			}
 		}
 	}
 
