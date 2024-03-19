@@ -152,17 +152,17 @@ func getHashFunc(hashType string) func([]byte) string {
 	case "xxhash":
 		return func(data []byte) string {
 			hash := xxhash.Sum64(data)
-			return fmt.Sprintf("%x", hash)
+			return fmt.Sprintf("%016x", hash)
 		}
 	case "cityhash":
 		return func(data []byte) string {
 			hash := city.Hash128(data)
-			return fmt.Sprintf("%x%x", hash.High, hash.Low)
+			return fmt.Sprintf("%016x%016x", hash.High, hash.Low)
 		}
 	case "murmur3":
 		return func(data []byte) string {
 			h1, h2 := murmur3.Sum128(data)
-			return fmt.Sprintf("%x%x", h1, h2)
+			return fmt.Sprintf("%016x%016x", h1, h2)
 		}
 	default: // Default to SHA1
 		return func(data []byte) string {
