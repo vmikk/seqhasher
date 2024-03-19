@@ -46,7 +46,7 @@ func main() {
 		fmt.Println("  input_file    - Path to the input FASTA file or '-' for stdin.")
 		fmt.Println("  output_file   - Path to the output file or '-' for stdout. Optional; defaults to stdout if not provided.")
 		fmt.Println("  --name        - Optional. Replaces the input file name in the header with the specified text.")
-		fmt.Println("  --noFilename      - Optional. Disables adding a file name to the sequence header.")
+		fmt.Println("  --nofilename      - Optional. Disables adding a file name to the sequence header.")
 		fmt.Println("  --headersonly - Optional. Outputs only sequence headers.")
 		fmt.Println("  --hashtype    - Optional. The hash type: sha1 (default), md5, xxhash, cityhash (as in VSEARCH), murmur3 (as in Sourmash).")
 		fmt.Println("\nExamples:")
