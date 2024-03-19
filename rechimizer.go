@@ -23,15 +23,18 @@ import (
 // Define variables
 var headersOnly bool
 var hashType string
+var noFileName bool
 
 func main() {
 	nameFlag := flag.String("name", "", "Optional text to replace input file name in the header")
 	headersOnlyFlag := flag.Bool("headersonly", false, "If enabled, output only sequence headers")
 	hashTypeFlag := flag.String("hashtype", "sha1", "Defines the hash type: sha1 (default), md5, xxhash, cityhash, murmur3")
+	noFileNameFlag := flag.Bool("nofilename", false, "If enabled, disables adding a file name to the sequence header")
 	flag.Parse()
 
 	headersOnly = *headersOnlyFlag // Set variables based on the flag values
 	hashType = *hashTypeFlag
+	noFileName = *noFileNameFlag
 	nonFlagArgs := flag.Args() // Get non-flag arguments
 
 	if len(nonFlagArgs) < 1 || len(nonFlagArgs) > 2 || (*nameFlag == "" && len(nonFlagArgs) == 1) {
@@ -43,6 +46,7 @@ func main() {
 		fmt.Println("  input_file    - Path to the input FASTA file or '-' for stdin.")
 		fmt.Println("  output_file   - Path to the output file or '-' for stdout. Optional; defaults to stdout if not provided.")
 		fmt.Println("  --name        - Optional. Replaces the input file name in the header with the specified text.")
+		fmt.Println("  --noFilename      - Optional. Disables adding a file name to the sequence header.")
 		fmt.Println("  --headersonly - Optional. Outputs only sequence headers.")
 		fmt.Println("  --hashtype    - Optional. The hash type: sha1 (default), md5, xxhash, cityhash (as in VSEARCH), murmur3 (as in Sourmash).")
 		fmt.Println("\nExamples:")
@@ -118,7 +122,14 @@ func processSequences(input io.Reader, output io.Writer, inputFileName string) {
 		seq := record.Seq.Seq
 		hashFunc := getHashFunc(hashType)
 		hashedSeq := hashFunc(seq)
-		modifiedHeader := fmt.Sprintf("%s;%s;%s", inputFileName, hashedSeq, record.Name)
+
+		// Prepare the new sequence header
+		var modifiedHeader string
+		if noFileName {
+			modifiedHeader = fmt.Sprintf("%s;%s", hashedSeq, record.Name)
+		} else {
+			modifiedHeader = fmt.Sprintf("%s;%s;%s", inputFileName, hashedSeq, record.Name)
+		}
 
 		if headersOnly {
 			// Output only the header, without the '>' sign, if `--headersonly` is enabled
