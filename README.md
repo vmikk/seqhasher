@@ -1,7 +1,8 @@
-# Rechimizer
+# SeqHasher
 
 ## Overview
-Rechimizer is a command-line tool designed to calculate a SHA1 hash for each sequence in a FASTA file and add it to a sequence header.
+`seqhasher` is a command-line tool designed to calculate a hash (digest or fingerprint) 
+for each sequence in a FASTA file and add it to a sequence header.  
 
 ## Usage
 
