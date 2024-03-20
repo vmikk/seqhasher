@@ -1,4 +1,4 @@
-module github.com/vmikk/rechimizer
+module github.com/vmikk/seqhasher
 
 go 1.21.6
 
