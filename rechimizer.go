@@ -38,20 +38,20 @@ func main() {
 	nonFlagArgs := flag.Args() // Get non-flag arguments
 
 	if len(nonFlagArgs) < 1 || len(nonFlagArgs) > 2 || (*nameFlag == "" && len(nonFlagArgs) == 1) {
-		fmt.Println("Usage: rechimizer [--name user_text] input_file [output_file]")
+		fmt.Println("Usage: seqhasher [--name user_text] input_file [output_file]")
 		fmt.Println("\nDescription:")
-		fmt.Println("  Processes DNA sequences from a FASTA file, calculates a SHA1 hash for each,")
+		fmt.Println("  Processes DNA sequences from a FASTA file, calculates a hash digest for each,")
 		fmt.Println("  and outputs the modified sequences. To use standard input or output, specify '-' for the file name.")
 		fmt.Println("\nParameters:")
-		fmt.Println("  input_file    - Path to the input FASTA file or '-' for stdin.")
-		fmt.Println("  output_file   - Path to the output file or '-' for stdout. Optional; defaults to stdout if not provided.")
 		fmt.Println("  --name        - Optional. Replaces the input file name in the header with the specified text.")
-		fmt.Println("  --nofilename      - Optional. Disables adding a file name to the sequence header.")
+		fmt.Println("  --nofilename  - Optional. Disables adding a file name to the sequence header.")
 		fmt.Println("  --headersonly - Optional. Outputs only sequence headers.")
 		fmt.Println("  --hashtype    - Optional. The hash type: sha1 (default), md5, xxhash, cityhash (as in VSEARCH), murmur3 (as in Sourmash).")
+		fmt.Println("  input_file    - Path to the input FASTA file or '-' for stdin.")
+		fmt.Println("  output_file   - Path to the output file or '-' for stdout. Optional; defaults to stdout if not provided.")
 		fmt.Println("\nExamples:")
-		fmt.Println("  rechimizer input.fasta output.fasta")
-		fmt.Println("  rechimizer --name 'Sample' - - < input.fasta > output.fasta")
+		fmt.Println("  seqhasher input.fasta output.fasta")
+		fmt.Println("  seqhasher --name 'Sample' - - < input.fasta > output.fasta")
 		fmt.Println("\nUse -h for more information.")
 		return
 	}
