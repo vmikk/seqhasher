@@ -7,11 +7,16 @@ for each sequence in a FASTA file and add it to a sequence header.
 ## Usage
 
 ```plaintext
-rechimizer [--name user_text] input_file [output_file]
+seqhasher [--options] input_file [output_file]
+
 Parameters:
-    input_file: Specifies the path to the input FASTA file or '-' to use standard input (stdin).
-    output_file: Specifies the path to the output file or '-' to use standard output (stdout). This parameter is optional; if not provided, the output will be directed to stdout by default.
-    --name: An optional parameter that replaces the input file name in the header of the output with the specified text.
+  --name: An optional parameter that replaces the input file name in the header of the output with the specified text.
+  --nofilename: Optional. Disables adding a file name to the sequence header.
+  --headersonly: Optional. Outputs only sequence headers.
+  --hashtype: Optional. The hash type: sha1 (default), md5, xxhash, cityhash, murmur3.
+
+  input_file: Specifies the path to the input FASTA file or '-' to use standard input (stdin).
+  output_file: Specifies the path to the output file or '-' to use standard output (stdout). This parameter is optional; if not provided, the output will be directed to stdout by default.
 ```
 
 ### Description
