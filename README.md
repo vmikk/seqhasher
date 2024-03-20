@@ -21,7 +21,19 @@ Parameters:
 
 ### Description
 
-The tool can either read the input from a specified file or from standard input (`stdin`), and similarly, it can write the output to a specified file or standard output (`stdout`). The `--name` option allows to customize the header of the output by specifying a text to replace the input file name.
+The tool can either read the input from a specified file or from standard input (`stdin`), 
+and similarly, it can write the output to a specified file or standard output (`stdout`).  
+
+The `--name` option allows to customize the header of the output by specifying 
+a text to replace the input file name.
+
+The `--hashtype` option allows to specify which hash function to use. 
+Currently, the following hash functions are supported:  
+- SHA1 (default), 160-bit hash value
+- MD5, 128-bit hash value
+- xxHash ([extremely fast](https://xxhash.com/)), 64-bit hash value
+- CityHash (e.g., used in [VSEARCH](https://github.com/torognes/vsearch/)), 128-bit hash value
+- Murmur3 (e.g., used in [Sourmash](https://github.com/sourmash-bio/sourmash), but 64-bit), 128-bit hash value
 
 ### Examples
 
