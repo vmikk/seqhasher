@@ -39,14 +39,14 @@ Currently, the following hash functions are supported:
 
 To process a FASTA file and output to another file:
 ```bash
-rechimizer input.fasta output.fasta
+seqhasher input.fasta output.fasta
 ```
 
 To process a FASTA file from standard input and output to standard output, while replacing the file name in the header with 'Sample':
 ```bash
-cat input.fasta | rechimizer --name 'Sample' - - > output.fasta
+cat input.fasta | seqhasher --name 'Sample' - - > output.fasta
 # OR
-rechimizer --name 'Sample' - - < input.fasta > output.fasta
+seqhasher --name 'Sample' - - < input.fasta > output.fasta
 ```
 
 ## Benchmark
