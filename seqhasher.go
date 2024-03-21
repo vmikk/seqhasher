@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
@@ -24,18 +25,24 @@ import (
 var headersOnly bool
 var hashType string
 var noFileName bool
+var caseSensitive bool
 
 func main() {
 	nameFlag := flag.String("name", "", "Optional text to replace input file name in the header")
 	headersOnlyFlag := flag.Bool("headersonly", false, "If enabled, output only sequence headers")
 	hashTypeFlag := flag.String("hashtype", "sha1", "Defines the hash type: sha1 (default), md5, xxhash, cityhash, murmur3")
 	noFileNameFlag := flag.Bool("nofilename", false, "If enabled, disables adding a file name to the sequence header")
+	caseSensitiveFlag := flag.Bool("casesensitive", false, "If enabled, keeps sequences as is without converting to uppercase")
 	flag.Parse()
 
-	headersOnly = *headersOnlyFlag // Set variables based on the flag values
+	// Set variables based on the flag values
+	headersOnly = *headersOnlyFlag
 	hashType = *hashTypeFlag
 	noFileName = *noFileNameFlag
-	nonFlagArgs := flag.Args() // Get non-flag arguments
+	caseSensitive = *caseSensitiveFlag
+
+	// Get non-flag arguments
+	nonFlagArgs := flag.Args()
 
 	if len(nonFlagArgs) < 1 || len(nonFlagArgs) > 2 || (*nameFlag == "" && len(nonFlagArgs) == 1) {
 		fmt.Println("Usage: seqhasher [--name user_text] input_file [output_file]")
@@ -47,6 +54,7 @@ func main() {
 		fmt.Println("  --nofilename  - Optional. Disables adding a file name to the sequence header.")
 		fmt.Println("  --headersonly - Optional. Outputs only sequence headers.")
 		fmt.Println("  --hashtype    - Optional. The hash type: sha1 (default), md5, xxhash, cityhash (as in VSEARCH), murmur3 (as in Sourmash).")
+		fmt.Println("  --casesensitive - Optional. Keeps sequences as is without forcing to uppercase.")
 		fmt.Println("  input_file    - Path to the input FASTA file or '-' for stdin.")
 		fmt.Println("  output_file   - Path to the output file or '-' for stdout. Optional; defaults to stdout if not provided.")
 		fmt.Println("\nExamples:")
@@ -97,10 +105,10 @@ func main() {
 		output = os.Stdout
 	}
 
-	processSequences(input, output, inputFileName)
+	processSequences(input, output, inputFileName, caseSensitive)
 }
 
-func processSequences(input io.Reader, output io.Writer, inputFileName string) {
+func processSequences(input io.Reader, output io.Writer, inputFileName string, caseSensitive bool) {
 	writer := bufio.NewWriter(output)
 
 	reader, err := fastx.NewReaderFromIO(seq.DNA, bufio.NewReader(input), fastx.DefaultIDRegexp)
@@ -120,6 +128,11 @@ func processSequences(input io.Reader, output io.Writer, inputFileName string) {
 		}
 
 		seq := record.Seq.Seq
+		if !caseSensitive {
+			// Convert to uppercase if caseSensitive is false
+			seq = bytes.ToUpper(seq)
+		}
+
 		hashFunc := getHashFunc(hashType)
 		hashedSeq := hashFunc(seq)
 
