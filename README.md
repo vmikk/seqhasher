@@ -51,7 +51,9 @@ seqhasher --name 'Sample' - - < input.fasta > output.fasta
 
 ## Benchmark
 
-To evaluate the performance of two solutions for processing DNA sequences, we utilized [`hyperfine`](https://github.com/sharkdp/hyperfine) to compare an AWK-based solution against the `rechimizer` binary.
+To evaluate the performance of two solutions for processing DNA sequences, 
+we utilized [`hyperfine`](https://github.com/sharkdp/hyperfine) to compare 
+an AWK-based solution against the `seqhasher` binary.
 
 ### Test data
 
