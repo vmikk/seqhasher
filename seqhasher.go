@@ -44,6 +44,20 @@ func main() {
 	// Get non-flag arguments
 	nonFlagArgs := flag.Args()
 
+	// Validate hashType
+	validHashTypes := map[string]bool{
+		"sha1":     true,
+		"md5":      true,
+		"xxhash":   true,
+		"cityhash": true,
+		"murmur3":  true,
+	}
+
+	if _, valid := validHashTypes[hashType]; !valid {
+		fmt.Printf("Warning: Unsupported hash type '%s'. Using 'sha1' as default.\n", hashType)
+		hashType = "sha1" // Set to default
+	}
+
 	if len(nonFlagArgs) < 1 || len(nonFlagArgs) > 2 || (*nameFlag == "" && len(nonFlagArgs) == 1) {
 		fmt.Println("Usage: seqhasher [--name user_text] input_file [output_file]")
 		fmt.Println("\nDescription:")
