@@ -57,7 +57,8 @@ an AWK-based solution against the `seqhasher` binary.
 
 ### Test data
 
-First, let's create the test data: a FASTA file containing 500,000 sequences, each 30 to 3000 nucleotides long.
+First, let's create the test data: 
+a FASTA file containing 500,000 sequences, each 30 to 3000 nucleotides long.
 
 ```bash
 awk -v numSeq=500000 'BEGIN{
@@ -78,4 +79,26 @@ awk -v numSeq=500000 'BEGIN{
 }' > big.fasta
 ```
 The size of the file is ~760MB.
+
+
+### Hashing functions performance
+
+```bash
+hyperfine \
+  --runs 10 --warmup 3 \
+  --export-markdown hashing_benchmark.md \
+  'seqhasher --headersonly --casesensitive --hashtype sha1     big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hashtype md5      big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hashtype xxhash   big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hashtype cityhash big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hashtype murmur3  big.fasta - > /dev/null'
+```
+
+| Command    |      Mean [s] | Min [s] | Max [s] |    Relative |
+|:---------- | -------------:| -------:| -------:| -----------:|
+| sha1     | 1.753 ± 0.328 |   1.549 |   2.532 | 1.43 ± 0.41 |
+| md5      | 2.120 ± 0.437 |   1.685 |   2.718 | 1.73 ± 0.52 |
+| xxhash   | 1.223 ± 0.269 |   0.921 |   1.512 | 1.00        |
+| cityhash | 1.288 ± 0.250 |   1.038 |   1.647 | 1.05 ± 0.31 |
+| murmur3  | 1.224 ± 0.230 |   1.032 |   1.610 | 1.00 ± 0.29 |
 
