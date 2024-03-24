@@ -67,6 +67,7 @@ Parameters:
   --nofilename: Optional. Disables adding a file name to the sequence header.
   --headersonly: Optional. Outputs only sequence headers.
   --hashtype: Optional. The hash type: sha1 (default), md5, xxhash, cityhash, murmur3.
+  --casesensitive: Optional. Keeps sequences as is without forcing to uppercase.
 
   input_file: Specifies the path to the input FASTA file or '-' to use standard input (stdin).
   output_file: Specifies the path to the output file or '-' to use standard output (stdout). This parameter is optional; if not provided, the output will be directed to stdout by default.
