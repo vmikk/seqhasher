@@ -4,6 +4,59 @@
 `seqhasher` is a command-line tool designed to calculate a hash (digest or fingerprint) 
 for each sequence in a FASTA file and add it to a sequence header.  
 
+## Quick start
+
+Input data (e.g., `inp.fasta`):
+```
+>seq1
+AAAA
+>seq2
+ACTG
+>seq3
+AAAA
+``` 
+
+`seqhasher input.fasta -`
+```
+>input.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+AAAA
+>input.fasta;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+ACTG
+>input.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+AAAA
+```
+
+`seqhasher --name "test_file" input.fasta -`
+```
+>test_file;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+AAAA
+>test_file;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+ACTG
+>test_file;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+AAAA
+```
+
+`seqhasher --headersonly input.fasta -`
+```
+input.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+input.fasta;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+input.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+```
+
+`seqhasher --headersonly --nofilename input.fasta -`
+```
+e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+```
+
+`seqhasher --headersonly --nofilename --hashtype xxhash input.fasta -`
+```
+cf40b5b72bc43e77;seq1
+704b34bf20faedf2;seq2
+cf40b5b72bc43e77;seq3
+```
+
 ## Usage
 
 ```plaintext
