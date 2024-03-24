@@ -83,11 +83,11 @@ a text to replace the input file name.
 
 The `--hashtype` option allows to specify which hash function to use. 
 Currently, the following hash functions are supported:  
-- SHA1 (default), 160-bit hash value
-- MD5, 128-bit hash value
-- xxHash ([extremely fast](https://xxhash.com/)), 64-bit hash value
-- CityHash (e.g., used in [VSEARCH](https://github.com/torognes/vsearch/)), 128-bit hash value
-- Murmur3 (e.g., used in [Sourmash](https://github.com/sourmash-bio/sourmash), but 64-bit), 128-bit hash value
+- `sha1`: [SHA-1](https://en.wikipedia.org/wiki/SHA-1) (default), 160-bit hash value
+- `md5`: [MD5](https://en.wikipedia.org/wiki/MD5), 128-bit hash value
+- `xxhash`: xxHash ([extremely fast](https://xxhash.com/)), 64-bit hash value
+- `cityhash`: [CityHash](https://opensource.googleblog.com/2011/04/introducing-cityhash.html) (e.g., used in [VSEARCH](https://github.com/torognes/vsearch/)), 128-bit hash value
+- `murmur3`: [Murmur3](https://en.wikipedia.org/wiki/MurmurHash) (e.g., used in [Sourmash](https://github.com/sourmash-bio/sourmash), but 64-bit), 128-bit hash value
 
 ### Examples
 
