@@ -21,6 +21,9 @@ import (
 	"github.com/spaolacci/murmur3"
 )
 
+// Application version
+const version = "1.0.0"
+
 // Define variables
 var headersOnly bool
 var hashType string
@@ -28,12 +31,28 @@ var noFileName bool
 var caseSensitive bool
 
 func main() {
+
+	// Check for `-v` or `--version`
+	for _, arg := range os.Args[1:] {
+		if arg == "-v" || arg == "--version" {
+			fmt.Println("seqhasher", version)
+			return
+		}
+	}
+	versionFlag := flag.Bool("version", false, "Prints the version of the program and exits")
+
 	nameFlag := flag.String("name", "", "Optional text to replace input file name in the header")
 	headersOnlyFlag := flag.Bool("headersonly", false, "If enabled, output only sequence headers")
-	hashTypeFlag := flag.String("hashtype", "sha1", "Defines the hash type: sha1 (default), md5, xxhash, cityhash, murmur3")
+	hashTypeFlag := flag.String("hashtype", "sha1", "Defines the hash type: sha1, md5, xxhash, cityhash, murmur3")
 	noFileNameFlag := flag.Bool("nofilename", false, "If enabled, disables adding a file name to the sequence header")
 	caseSensitiveFlag := flag.Bool("casesensitive", false, "If enabled, keeps sequences as is without converting to uppercase")
 	flag.Parse()
+
+	// Check version
+	if *versionFlag {
+		fmt.Println("seqhasher", version)
+		return
+	}
 
 	// Set variables based on the flag values
 	headersOnly = *headersOnlyFlag
