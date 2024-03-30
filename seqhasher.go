@@ -79,6 +79,7 @@ func main() {
 
 	if len(nonFlagArgs) < 1 || len(nonFlagArgs) > 2 || (*nameFlag == "" && len(nonFlagArgs) == 1) {
 		fmt.Println("SeqHasher: DNA Sequence Hashing Tool")
+		fmt.Println("version:  ", version)
 		fmt.Println("=====================================")
 		fmt.Println("Usage:")
 		fmt.Println("  seqhasher [options] <input_file> [output_file]")
@@ -92,6 +93,7 @@ func main() {
 		fmt.Println("  --headersonly         Only output sequence headers, excluding the sequences themselves.")
 		fmt.Println("  --hashtype <type>     Specify the hash algorithm: sha1 (default), md5, xxhash, cityhash, or murmur3.")
 		fmt.Println("  --casesensitive       Take into account sequence case. By default, sequences are converted to uppercase.")
+		fmt.Println("  --version             Prints the version of the program and exits.")
 		fmt.Println("\nArguments:")
 		fmt.Println("  <input_file>          The path to the input FASTA file or '-' for standard input (stdin).")
 		fmt.Println("  [output_file]         The path to the output file or '-' for standard output (stdout).")
