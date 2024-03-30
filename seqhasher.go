@@ -1,3 +1,8 @@
+// This file is part of SeqHasher program (by Vladimir Mikryukov)
+// and is licensed under GNU GPL-3.0-or-later.
+// See the LICENSE file in the root of the source tree
+// or <http://www.gnu.org/licenses/gpl-3.0.html>.
+
 package main
 
 import (
