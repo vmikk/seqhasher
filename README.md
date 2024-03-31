@@ -60,15 +60,17 @@ cf40b5b72bc43e77;seq3
 ## Usage
 
 ```plaintext
-seqhasher [--options] input_file [output_file]
+seqhasher [--options] <input_file> [output_file]
 
-Parameters:
+Options:
   --name: An optional parameter that replaces the input file name in the header of the output with the specified text.
-  --nofilename: Optional. Disables adding a file name to the sequence header.
-  --headersonly: Optional. Outputs only sequence headers.
-  --hashtype: Optional. The hash type: sha1 (default), md5, xxhash, cityhash, murmur3.
-  --casesensitive: Optional. Keeps sequences as is without forcing to uppercase.
+  --nofilename: Disables adding a file name to the sequence header.
+  --headersonly: Outputs only sequence headers.
+  --hashtype: The hash type: sha1 (default), md5, xxhash, cityhash, murmur3.
+  --casesensitive: Keeps sequences as is without forcing to uppercase.
+  --version: Prints the version of the program and exits.
 
+Arguments:
   input_file: Specifies the path to the input FASTA file or '-' to use standard input (stdin).
   output_file: Specifies the path to the output file or '-' to use standard output (stdout). This parameter is optional; if not provided, the output will be directed to stdout by default.
 ```
@@ -154,4 +156,9 @@ hyperfine \
 | xxhash   | 1.223 ± 0.269 |   0.921 |   1.512 | 1.00        |
 | cityhash | 1.288 ± 0.250 |   1.038 |   1.647 | 1.05 ± 0.31 |
 | murmur3  | 1.224 ± 0.230 |   1.032 |   1.610 | 1.00 ± 0.29 |
+
+
+### Processing large file
+
+Compare an `AWK`-based solution against the `seqhasher` binary.
 
