@@ -50,7 +50,7 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
 e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 ```
 
-`seqhasher --headersonly --nofilename --hashtype xxhash input.fasta -`
+`seqhasher --headersonly --nofilename --hash xxhash input.fasta -`
 ```
 cf40b5b72bc43e77;seq1
 704b34bf20faedf2;seq2
@@ -83,7 +83,7 @@ and similarly, it can write the output to a specified file or standard output (`
 The `--name` option allows to customize the header of the output by specifying 
 a text to replace the input file name.
 
-The `--hashtype` option allows to specify which hash function to use. 
+The `--hash` option allows to specify which hash function to use. 
 Currently, the following hash functions are supported:  
 - `sha1`: [SHA-1](https://en.wikipedia.org/wiki/SHA-1) (default), 160-bit hash value
 - `md5`: [MD5](https://en.wikipedia.org/wiki/MD5), 128-bit hash value
@@ -142,11 +142,11 @@ The size of the file is ~760MB.
 hyperfine \
   --runs 10 --warmup 3 \
   --export-markdown hashing_benchmark.md \
-  'seqhasher --headersonly --casesensitive --hashtype sha1     big.fasta - > /dev/null' \
-  'seqhasher --headersonly --casesensitive --hashtype md5      big.fasta - > /dev/null' \
-  'seqhasher --headersonly --casesensitive --hashtype xxhash   big.fasta - > /dev/null' \
-  'seqhasher --headersonly --casesensitive --hashtype cityhash big.fasta - > /dev/null' \
-  'seqhasher --headersonly --casesensitive --hashtype murmur3  big.fasta - > /dev/null'
+  'seqhasher --headersonly --casesensitive --hash sha1     big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash md5      big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash xxhash   big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash cityhash big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash murmur3  big.fasta - > /dev/null'
 ```
 
 | Command    |      Mean [s] | Min [s] | Max [s] |    Relative |
