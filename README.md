@@ -63,16 +63,16 @@ cf40b5b72bc43e77;seq3
 seqhasher [--options] <input_file> [output_file]
 
 Options:
-  --name: An optional parameter that replaces the input file name in the header of the output with the specified text.
-  --nofilename: Disables adding a file name to the sequence header.
-  --headersonly: Outputs only sequence headers.
-  --hashtype: The hash type: sha1 (default), md5, xxhash, cityhash, murmur3.
-  --casesensitive: Keeps sequences as is without forcing to uppercase.
-  --version: Prints the version of the program and exits.
+  --nofilename: Omit the file name from the sequence header
+  --name: Replace the input file name in the header of the output with the specified text
+  --headersonly: Only output sequence headers,  excluding the sequences themselves
+  --hash: Hash algorithm: sha1 (default), md5, xxhash, cityhash, or murmur3
+  --casesensitive:  Take into account sequence case. By default, sequences are converted to uppercase
+  --version: Prints the version of the program and exits
 
 Arguments:
-  input_file: Specifies the path to the input FASTA file or '-' to use standard input (stdin).
-  output_file: Specifies the path to the output file or '-' to use standard output (stdout). This parameter is optional; if not provided, the output will be directed to stdout by default.
+  input_file: The path to the input FASTA file or '-' for standard input (stdin).
+  output_file: The path to the output file or '-' for standard output (stdout). This parameter is optional; if not provided, the output will be directed to stdout by default.
 ```
 
 ### Description
