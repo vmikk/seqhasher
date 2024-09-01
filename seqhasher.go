@@ -140,7 +140,7 @@ func printUsage() {
 		fmt.Printf("  %s %s\n", color.HiMagentaString("--name <text>"), color.WhiteString("   Replace the input file's name in the header with <text>"))
 		fmt.Printf("  %s %s\n", color.HiMagentaString("--headersonly"), color.WhiteString("   Only output sequence headers, excluding the sequences themselves"))
 		fmt.Printf("  %s %s\n", color.HiMagentaString("--hash <type>"), color.WhiteString("   Hash algorithm: sha1 (default), md5, xxhash, cityhash, or murmur3"))
-		fmt.Printf("  %s %s\n", color.HiMagentaString("--casesensitive"), color.WhiteString(" Take into account sequence case. By default, sequences are converted to uppercase."))
+		fmt.Printf("  %s %s\n", color.HiMagentaString("--casesensitive"), color.WhiteString(" Take into account sequence case. By default, sequences are converted to uppercase"))
 		fmt.Printf("  %s %s\n", color.HiMagentaString("--version"), color.WhiteString("       Prints the version of the program and exits"))
 		fmt.Println(color.HiCyanString("\nArguments:"))
 		fmt.Printf("  %s %s\n", color.HiMagentaString("<input_file>"), color.WhiteString("    The path to the input FASTA file or '-' for standard input (stdin)"))
