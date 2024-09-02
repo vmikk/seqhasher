@@ -1,8 +1,14 @@
 # SeqHasher
 
 ## Overview
-`seqhasher` is a command-line tool designed to calculate a hash (digest or fingerprint) 
-for each sequence in a FASTA file and add it to a sequence header.  
+`seqhasher` is a high-performance command-line tool designed to calculate a hash (digest or fingerprint) for each sequence in a FASTA file and add it to the sequence header. It supports multiple hashing algorithms and offers various output options.
+
+## Features
+- Fast processing of FASTA files (thanks to [shenwei356/bio](https://github.com/shenwei356/bio) package)
+- Support for multiple hash algorithms: SHA1, MD5, xxHash, CityHash, and MurmurHash3
+- Option to output only headers or full sequences
+- Case-sensitive hashing option
+- Customizable output format (e.g., include filename in the header)
 
 ## Quick start
 
