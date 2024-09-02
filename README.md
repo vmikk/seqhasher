@@ -163,6 +163,8 @@ hyperfine \
 | cityhash | 1.288 ± 0.250 |   1.038 |   1.647 | 1.05 ± 0.31 |
 | murmur3  | 1.224 ± 0.230 |   1.032 |   1.610 | 1.00 ± 0.29 |
 
+As shown, xxHash and MurmurHash3 offer the best performance, while MD5 is the slowest among the tested algorithms.
+
 
 ### Processing large file
 
