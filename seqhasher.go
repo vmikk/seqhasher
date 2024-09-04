@@ -80,10 +80,20 @@ func parseFlags() config {
 	cfg := config{}
 
 	flag.BoolVar(&cfg.headersOnly, "headersonly", false, "Output only headers")
+	flag.BoolVar(&cfg.headersOnly, "o", false, "Output only headers (shorthand)")
+
 	flag.StringVar(&cfg.hashType, "hash", defaultHashType, "Hash type (sha1, md5, xxhash, cityhash, murmur3)")
+	flag.StringVar(&cfg.hashType, "H", defaultHashType, "Hash type (shorthand)")
+
 	flag.BoolVar(&cfg.noFileName, "nofilename", false, "Do not include file name in output")
+	flag.BoolVar(&cfg.noFileName, "n", false, "Do not include file name in output (shorthand)")
+
 	flag.BoolVar(&cfg.caseSensitive, "casesensitive", false, "Case-sensitive hashing")
+	flag.BoolVar(&cfg.caseSensitive, "c", false, "Case-sensitive hashing (shorthand)")
+
 	flag.StringVar(&cfg.nameOverride, "name", "", "Override input file name in output")
+	flag.StringVar(&cfg.nameOverride, "f", "", "Override input file name in output (shorthand)")
+
 	flag.BoolVar(&cfg.showVersion, "version", false, "Show version information")
 	flag.BoolVar(&cfg.showVersion, "v", false, "Show version information (shorthand)")
 
