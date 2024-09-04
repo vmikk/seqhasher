@@ -45,10 +45,16 @@ type config struct {
 	inputFileName  string
 	outputFileName string
 	nameOverride   string
+	showVersion    bool
 }
 
 func main() {
 	cfg := parseFlags()
+
+	if cfg.showVersion {
+		fmt.Printf("SeqHasher %s\n", version)
+		return
+	}
 
 	if cfg.inputFileName == "" {
 		printUsage()
@@ -78,6 +84,8 @@ func parseFlags() config {
 	flag.BoolVar(&cfg.noFileName, "nofilename", false, "Do not include file name in output")
 	flag.BoolVar(&cfg.caseSensitive, "casesensitive", false, "Case-sensitive hashing")
 	flag.StringVar(&cfg.nameOverride, "name", "", "Override input file name in output")
+	flag.BoolVar(&cfg.showVersion, "version", false, "Show version information")
+	flag.BoolVar(&cfg.showVersion, "v", false, "Show version information (shorthand)")
 
 	flag.Usage = printUsage
 	flag.Parse()
