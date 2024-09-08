@@ -27,6 +27,7 @@ import (
 	"github.com/spaolacci/murmur3"
 
 	"github.com/fatih/color"
+	"github.com/will-rowe/nthash"
 )
 
 const (
@@ -267,6 +268,16 @@ func getHashFunc(hashType string) func([]byte) string {
 		return func(data []byte) string {
 			h1, h2 := murmur3.Sum128(data)
 			return fmt.Sprintf("%016x%016x", h1, h2)
+		}
+	case "nthash":
+		return func(data []byte) string {
+			hasher, err := nthash.NewHasher(&data, uint(len(data)))
+			if err != nil {
+				log.Printf("Error creating ntHash hasher: %v", err)
+				return ""
+			}
+			hash, _ := hasher.Next(false) // false for non-canonical hash
+			return fmt.Sprintf("%016x", hash)
 		}
 	default: // Default to SHA1
 		return func(data []byte) string {
