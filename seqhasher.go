@@ -35,7 +35,7 @@ const (
 	defaultHashType = "sha1"  // Default hash type
 )
 
-var supportedHashTypes = []string{"sha1", "md5", "xxhash", "cityhash", "murmur3"}
+var supportedHashTypes = []string{"sha1", "md5", "xxhash", "cityhash", "murmur3", "nthash"}
 
 // Configuration structure (flags)
 type config struct {
