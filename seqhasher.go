@@ -254,20 +254,20 @@ func getHashFunc(hashType string) func([]byte) string {
 			return ""
 		}
 
-	switch hashType {
-	case "md5":
+		switch hashType {
+		case "md5":
 			hash := md5.Sum(data)
 			return hex.EncodeToString(hash[:])
-	case "xxhash":
+		case "xxhash":
 			hash := xxhash.Sum64(data)
 			return fmt.Sprintf("%016x", hash)
-	case "cityhash":
+		case "cityhash":
 			hash := city.Hash128(data)
 			return fmt.Sprintf("%016x%016x", hash.High, hash.Low)
-	case "murmur3":
+		case "murmur3":
 			h1, h2 := murmur3.Sum128(data)
 			return fmt.Sprintf("%016x%016x", h1, h2)
-	case "nthash":
+		case "nthash":
 			hasher, err := nthash.NewHasher(&data, uint(len(data)))
 			if err != nil {
 				log.Printf("Error creating ntHash hasher: %v", err)
@@ -275,7 +275,7 @@ func getHashFunc(hashType string) func([]byte) string {
 			}
 			hash, _ := hasher.Next(false) // false for non-canonical hash
 			return fmt.Sprintf("%016x", hash)
-	default: // Default to SHA1
+		default: // Default to SHA1
 			hash := sha1.Sum(data)
 			return hex.EncodeToString(hash[:])
 		}
