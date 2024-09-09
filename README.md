@@ -1,5 +1,7 @@
 # SeqHasher
 
+[![Go Test](https://github.com/vmikk/seqhasher/actions/workflows/go-test.yml/badge.svg)](https://github.com/vmikk/seqhasher/actions/workflows/go-test.yml)
+
 ## Overview
 `seqhasher` is a high-performance command-line tool designed to calculate a hash (digest or fingerprint) for each sequence in a FASTA file and add it to the sequence header. It supports multiple hashing algorithms and offers various output options.
 
