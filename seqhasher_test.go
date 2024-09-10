@@ -380,3 +380,25 @@ func TestGetOutputError(t *testing.T) {
 	}
 }
 
+func TestPrintUsage(t *testing.T) {
+	// Redirect stderr to capture output
+	oldStderr := os.Stderr
+	r, w, _ := os.Pipe()
+	os.Stderr = w
+
+	printUsage()
+
+	// Restore stderr
+	w.Close()
+	os.Stderr = oldStderr
+
+	// Read captured output
+	var buf bytes.Buffer
+	io.Copy(&buf, r)
+	output := buf.String()
+
+	// Check if usage information is printed
+	if !strings.Contains(output, "Usage:") || !strings.Contains(output, "Options:") {
+		t.Errorf("Expected usage information, got: %s", output)
+	}
+}
