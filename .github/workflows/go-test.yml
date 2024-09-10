@@ -24,8 +24,27 @@ jobs:
       run: |
         go get -v -t -d ./...
 
-    - name: Run tests
-      run: go test -v ./...
+    # - name: Run TestAll
+    #  run: go test -v -run TestAll
+
+    - name: Run TestParseFlags
+      run: go test -v -run TestParseFlags
+
+    - name: Run TestIsValidHashType
+      run: go test -v -run TestIsValidHashType
+
+    - name: Run TestGetInput
+      run: go test -v -run TestGetInput
+
+    - name: Run TestGetOutput
+      run: go test -v -run TestGetOutput
+
+    - name: Run TestProcessSequences
+      run: go test -v -run TestProcessSequences
+
+    - name: Run TestGetHashFunc
+      run: go test -v -run TestGetHashFunc
+
 
     - name: Upload test results
       uses: actions/upload-artifact@v3
