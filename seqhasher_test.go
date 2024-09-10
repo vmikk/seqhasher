@@ -333,9 +333,29 @@ func TestAll(t *testing.T) {
 	t.Run("GetOutput", TestGetOutput)
 	t.Run("ProcessSequences", TestProcessSequences)
 	t.Run("GetHashFunc", TestGetHashFunc)
+	t.Run("MainFunction", TestMainFunction)
 
 	// Check for test failures
 	if t.Failed() {
 		failedTests = append(failedTests, t.Name())
 	}
 }
+
+func TestMainFunction(t *testing.T) {
+	// Set up arguments
+	oldArgs := os.Args
+	os.Args = []string{"cmd", "-version"}
+
+	// Call run() instead of main()
+	output := run()
+
+	// Restore arguments
+	os.Args = oldArgs
+
+	// Check if version is printed
+	expectedOutput := fmt.Sprintf("SeqHasher %s\n", version)
+	if output != expectedOutput {
+		t.Errorf("Expected output %q, got %q", expectedOutput, output)
+	}
+}
+
