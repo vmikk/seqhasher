@@ -359,3 +359,10 @@ func TestMainFunction(t *testing.T) {
 	}
 }
 
+func TestGetInputError(t *testing.T) {
+	_, err := getInput("nonexistent_file.txt")
+	if err == nil {
+		t.Error("Expected an error for nonexistent file, got nil")
+	}
+}
+
