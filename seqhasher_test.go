@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"reflect"
 	"strings"
@@ -172,7 +173,6 @@ func TestGetOutput(t *testing.T) {
 		fileName string
 		wantErr  bool
 	}{
-		{"Stdout", "-", false},
 		{"New file", "test_output.fasta", false},
 	}
 
@@ -193,6 +193,18 @@ func TestGetOutput(t *testing.T) {
 			}
 		})
 	}
+
+	// Test stdout separately
+	t.Run("Stdout", func(t *testing.T) {
+		output, err := getOutput("-")
+		if err != nil {
+			t.Errorf("getOutput(\"-\") returned unexpected error: %v", err)
+		}
+		if output != os.Stdout {
+			t.Errorf("getOutput(\"-\") did not return os.Stdout")
+		}
+		// Don't close os.Stdout
+	})
 }
 
 // Test if the sequence processing works correctly
