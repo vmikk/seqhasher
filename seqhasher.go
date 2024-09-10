@@ -49,32 +49,39 @@ type config struct {
 	showVersion    bool
 }
 
-func main() {
+func run() string {
 	cfg := parseFlags()
 
 	if cfg.showVersion {
-		fmt.Printf("SeqHasher %s\n", version)
-		return
+		return fmt.Sprintf("SeqHasher %s\n", version)
 	}
 
 	if cfg.inputFileName == "" {
+		var buf bytes.Buffer
 		printUsage()
-		return
+		return buf.String()
 	}
 
 	input, err := getInput(cfg.inputFileName)
 	if err != nil {
-		log.Fatalf("Error opening input: %v", err)
+		return fmt.Sprintf("Error opening input: %v\n", err)
 	}
 	defer input.Close()
 
-	output, err := getOutput(cfg.outputFileName)
-	if err != nil {
-		log.Fatalf("Error opening output: %v", err)
-	}
-	defer output.Close()
+	var outputBuffer bytes.Buffer
+	output := bufio.NewWriter(&outputBuffer)
 
 	processSequences(input, output, cfg)
+
+	if err := output.Flush(); err != nil {
+		return fmt.Sprintf("Error flushing output: %v\n", err)
+	}
+
+	return outputBuffer.String()
+}
+
+func main() {
+	fmt.Print(run())
 }
 
 func parseFlags() config {

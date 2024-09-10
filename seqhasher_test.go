@@ -338,7 +338,6 @@ var failedTests []string
 
 // TestAll runs all tests and captures failures
 func TestAll(t *testing.T) {
-	// Run all test functions
 	t.Run("ParseFlags", TestParseFlags)
 	t.Run("IsValidHashType", TestIsValidHashType)
 	t.Run("GetInput", TestGetInput)
