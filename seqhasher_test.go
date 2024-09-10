@@ -366,3 +366,17 @@ func TestGetInputError(t *testing.T) {
 	}
 }
 
+func TestGetOutputError(t *testing.T) {
+	// Create a directory to test writing to a directory (which should fail)
+	err := os.Mkdir("testdir", 0755)
+	if err != nil {
+		t.Fatalf("Failed to create test directory: %v", err)
+	}
+	defer os.RemoveAll("testdir")
+
+	_, err = getOutput("testdir")
+	if err == nil {
+		t.Error("Expected an error when trying to write to a directory, got nil")
+	}
+}
+
