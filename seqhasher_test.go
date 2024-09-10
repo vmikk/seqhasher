@@ -228,6 +228,18 @@ func TestProcessSequences(t *testing.T) {
 				"86bfb9f78dd8b6cd35962bb7324fdbf8;seq1_lowercase\n" +
 				"5c15f97a88433c48f8bf76745d9da437;seq2\n",
 		},
+		{
+			name: "ntHash",
+			cfg: config{
+				hashType:      "nthash",
+				noFileName:    false,
+				caseSensitive: false,
+				inputFileName: "test.fasta",
+			},
+			expected: ">test.fasta;508876b331232519;seq1\nACTG\n" +
+				">test.fasta;508876b331232519;seq1_lowercase\nACTG\n" +
+				">test.fasta;95cecc5106c8fccd;seq2\nTGCA\n",
+		},
 	}
 
 	for _, tt := range tests {
