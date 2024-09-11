@@ -14,14 +14,14 @@
 
 ## Quick start
 
-Input data (e.g., `inp.fasta`):
+Input data (e.g., `input.fasta`):
 ```
 >seq1
 AAAA
 >seq2
 ACTG
 >seq3
-AAAA
+aaaa
 ``` 
 
 `seqhasher input.fasta -`
