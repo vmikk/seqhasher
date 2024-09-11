@@ -71,12 +71,13 @@ cf40b5b72bc43e77;seq3
 seqhasher [--options] <input_file> [output_file]
 
 Options:
-  --nofilename: Omit the file name from the sequence header
-  --name: Replace the input file name in the header of the output with the specified text
-  --headersonly: Only output sequence headers,  excluding the sequences themselves
-  --hash: Hash algorithm: sha1 (default), md5, xxhash, cityhash, or murmur3
-  --casesensitive:  Take into account sequence case. By default, sequences are converted to uppercase
-  --version: Prints the version of the program and exits
+  -n, --nofilename: Omit the file name from the sequence header
+  -f, --name: Replace the input file name in the header of the output with the specified text
+  -o, --headersonly: Only output sequence headers, excluding the sequences themselves
+  -H, --hash: Hash algorithm: sha1 (default), md5, xxhash, cityhash, or murmur3
+  -c, --casesensitive: Take into account sequence case. By default, sequences are converted to uppercase
+  -v, --version: Print the version of the program and exit
+  -h, --help: Show help message
 
 Arguments:
   input_file: The path to the input FASTA file or '-' for standard input (stdin).
