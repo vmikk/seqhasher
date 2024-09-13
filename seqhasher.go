@@ -175,8 +175,8 @@ func printUsage() {
 		fmt.Printf("  %s %s\n", color.HiMagentaString("[output_file]"), color.WhiteString("   The path to the output file or '-' for standard output (stdout)"))
 		fmt.Println(color.WhiteString("                   If omitted, defaults to stdout."))
 		fmt.Println(color.HiCyanString("\nExamples:"))
-		fmt.Println(color.WhiteString("  seqhasher input.fasta output.fasta"))
-		fmt.Println(color.WhiteString("  cat input.fasta | seqhasher --name 'Sample' - - > output.fasta"))
+		fmt.Println(color.WhiteString("  seqhasher input.fasta.gz output.fasta"))
+		fmt.Println(color.WhiteString("  cat input.fasta | seqhasher --name 'Sample' --hash xxhash - - > output.fasta"))
 	} else {
 		fmt.Fprintf(os.Stderr, "SeqHasher v%s\n", version)
 		fmt.Fprintf(os.Stderr, "Usage: %s [options] <input_file> [output_file]\n", os.Args[0])
