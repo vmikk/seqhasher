@@ -25,17 +25,18 @@ import (
 	"github.com/cespare/xxhash/v2"
 	"github.com/go-faster/city"
 	"github.com/spaolacci/murmur3"
+	"github.com/zeebo/blake3"
 
 	"github.com/fatih/color"
 	"github.com/will-rowe/nthash"
 )
 
 const (
-	version         = "1.0.1" // Version of the program
+	version         = "1.0.2" // Version of the program
 	defaultHashType = "sha1"  // Default hash type
 )
 
-var supportedHashTypes = []string{"sha1", "md5", "xxhash", "cityhash", "murmur3", "nthash"}
+var supportedHashTypes = []string{"sha1", "md5", "xxhash", "cityhash", "murmur3", "nthash", "blake3"}
 
 // Configuration structure (flags)
 type config struct {
@@ -282,6 +283,9 @@ func getHashFunc(hashType string) func([]byte) string {
 			}
 			hash, _ := hasher.Next(false) // false for non-canonical hash
 			return fmt.Sprintf("%016x", hash)
+		case "blake3":
+			hash := blake3.Sum256(data)
+			return hex.EncodeToString(hash[:])
 		default: // Default to SHA1
 			hash := sha1.Sum(data)
 			return hex.EncodeToString(hash[:])
