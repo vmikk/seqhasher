@@ -64,11 +64,13 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
 e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 ```
 
-`seqhasher --headersonly --nofilename --hash xxhash input.fasta -`
+Use different hash functions (xxHash) and case-sensitive mode:
+`seqhasher --headersonly --nofilename --hash xxhash --casesensitive input.fasta -`
 ```
 cf40b5b72bc43e77;seq1
 704b34bf20faedf2;seq2
-cf40b5b72bc43e77;seq3
+42a70d1abf84bf32;seq3
+```
 ```
 
 ## Usage
