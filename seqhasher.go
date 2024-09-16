@@ -182,6 +182,7 @@ func printUsage() {
 		fmt.Println(color.HiCyanString("\nExamples:"))
 		fmt.Println(color.WhiteString("  seqhasher input.fasta.gz output.fasta"))
 		fmt.Println(color.WhiteString("  cat input.fasta | seqhasher --name 'Sample' --hash xxhash - - > output.fasta"))
+		fmt.Println(color.WhiteString("  seqhasher --headersonly --nofilename --hash sha1,nthash input.fa.gz - > headers.txt"))
 	} else {
 		fmt.Fprintf(os.Stderr, "SeqHasher v%s\n", version)
 		fmt.Fprintf(os.Stderr, "Usage: %s [options] <input_file> [output_file]\n", os.Args[0])
