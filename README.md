@@ -26,6 +26,7 @@ ACTG
 aaaa
 ``` 
 
+Basic usage (default SHA1 hash):
 `seqhasher input.fasta -`
 ```
 >input.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
@@ -36,6 +37,7 @@ ACTG
 AAAA
 ```
 
+Custom name instead of input filename (e.g., useful when processing stdin):
 `seqhasher --name "test_file" input.fasta -`
 ```
 >test_file;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
@@ -46,6 +48,7 @@ ACTG
 AAAA
 ```
 
+Output only headers:
 `seqhasher --headersonly input.fasta -`
 ```
 input.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
@@ -53,6 +56,7 @@ input.fasta;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
 input.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 ```
 
+Omit filename from output:
 `seqhasher --headersonly --nofilename input.fasta -`
 ```
 e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
