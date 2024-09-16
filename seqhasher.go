@@ -41,7 +41,7 @@ var supportedHashTypes = []string{"sha1", "md5", "xxhash", "cityhash", "murmur3"
 // Configuration structure (flags)
 type config struct {
 	headersOnly    bool
-	hashType       string
+	hashTypes      []string
 	noFileName     bool
 	caseSensitive  bool
 	inputFileName  string
@@ -117,9 +117,13 @@ func parseFlags() config {
 		cfg.outputFileName = args[1]
 	}
 
-	// Validate hash type
-	if !isValidHashType(cfg.hashType) {
-		log.Fatalf("Invalid hash type: %s. Supported types are: %s", cfg.hashType, strings.Join(supportedHashTypes, ", "))
+	// Parse hash types
+	cfg.hashTypes = strings.Split(hashTypesString, ",")
+	for i, ht := range cfg.hashTypes {
+		cfg.hashTypes[i] = strings.TrimSpace(ht)
+		if !isValidHashType(cfg.hashTypes[i]) {
+			log.Fatalf("Invalid hash type: %s. Supported types are: %s", cfg.hashTypes[i], strings.Join(supportedHashTypes, ", "))
+		}
 	}
 
 	return cfg
@@ -205,7 +209,10 @@ func processSequences(input io.Reader, output io.Writer, cfg config) {
 		inputFileName = filepath.Base(inputFileName)
 	}
 
-	hashFunc := getHashFunc(cfg.hashType)
+	hashFuncs := make([]func([]byte) string, len(cfg.hashTypes))
+	for i, hashType := range cfg.hashTypes {
+		hashFuncs[i] = getHashFunc(hashType)
+	}
 
 	for {
 		record, err := reader.Read()
@@ -223,7 +230,13 @@ func processSequences(input io.Reader, output io.Writer, cfg config) {
 			seq = bytes.ToUpper(seq)
 		}
 
-		hashedSeq := hashFunc(seq)
+		var hashedSeqs []string
+		for _, hashFunc := range hashFuncs {
+			hashedSeqs = append(hashedSeqs, hashFunc(seq))
+		}
+
+		// Join all hashes
+		hashedSeq := strings.Join(hashedSeqs, ";")
 
 		// Prepare the new sequence header
 		var modifiedHeader string
