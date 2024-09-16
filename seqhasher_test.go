@@ -77,7 +77,7 @@ func TestParseFlags(t *testing.T) {
 			args: []string{"cmd", "input.fasta"},
 			expected: config{
 				headersOnly:   false,
-				hashTypes:     "sha1",
+				hashTypes:     []string{"sha1"},
 				noFileName:    false,
 				caseSensitive: false,
 				inputFileName: "input.fasta",
@@ -88,7 +88,7 @@ func TestParseFlags(t *testing.T) {
 			args: []string{"cmd", "-headersonly", "-hash", "md5", "-nofilename", "-casesensitive", "input.fasta", "output.fasta"},
 			expected: config{
 				headersOnly:    true,
-				hashTypes:      "md5",
+				hashTypes:      []string{"md5"},
 				noFileName:     true,
 				caseSensitive:  true,
 				inputFileName:  "input.fasta",
