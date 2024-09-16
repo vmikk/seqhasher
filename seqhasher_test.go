@@ -243,7 +243,7 @@ func TestProcessSequences(t *testing.T) {
 		{
 			name: "ntHash",
 			cfg: config{
-				hashTypes:     []string{"nthash"}
+				hashTypes:     []string{"nthash"},
 				noFileName:    false,
 				caseSensitive: false,
 				inputFileName: "test.fasta",
