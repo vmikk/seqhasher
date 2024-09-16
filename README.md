@@ -82,7 +82,7 @@ Options:
   -n, --nofilename: Omit the file name from the sequence header
   -f, --name: Replace the input file name in the header of the output with the specified text
   -o, --headersonly: Only output sequence headers, excluding the sequences themselves
-  -H, --hash: Hash algorithm: sha1 (default), md5, xxhash, cityhash, murmur3, nthash
+  -H, --hash: Hash algorithm(s), multiple comma-separated values supported: sha1 (default), md5, xxhash, cityhash, murmur3, nthash, or blake3
   -c, --casesensitive: Take into account sequence case. By default, sequences are converted to uppercase
   -v, --version: Print the version of the program and exit
   -h, --help: Show help message
