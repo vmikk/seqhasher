@@ -91,8 +91,9 @@ func parseFlags() config {
 	flag.BoolVar(&cfg.headersOnly, "headersonly", false, "Output only headers")
 	flag.BoolVar(&cfg.headersOnly, "o", false, "Output only headers (shorthand)")
 
-	flag.StringVar(&cfg.hashType, "hash", defaultHashType, "Hash type (sha1, md5, xxhash, cityhash, murmur3)")
-	flag.StringVar(&cfg.hashType, "H", defaultHashType, "Hash type (shorthand)")
+	var hashTypesString string
+	flag.StringVar(&hashTypesString, "hash", defaultHashType, "Hash type(s) (comma-separated: sha1, md5, xxhash, cityhash, murmur3, nthash, blake3)")
+	flag.StringVar(&hashTypesString, "H", defaultHashType, "Hash type(s) (shorthand)")
 
 	flag.BoolVar(&cfg.noFileName, "nofilename", false, "Do not include file name in output")
 	flag.BoolVar(&cfg.noFileName, "n", false, "Do not include file name in output (shorthand)")
