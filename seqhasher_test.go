@@ -218,7 +218,7 @@ func TestProcessSequences(t *testing.T) {
 		{
 			name: "Default settings",
 			cfg: config{
-				hashType:      "sha1",
+				hashTypes:     []string{"sha1"},
 				noFileName:    false,
 				caseSensitive: false,
 				inputFileName: "test.fasta",
@@ -231,7 +231,7 @@ func TestProcessSequences(t *testing.T) {
 			name: "Headers only",
 			cfg: config{
 				headersOnly:   true,
-				hashType:      "md5",
+				hashTypes:     []string{"md5"},
 				noFileName:    true,
 				caseSensitive: false,
 				inputFileName: "test.fasta",
@@ -243,7 +243,7 @@ func TestProcessSequences(t *testing.T) {
 		{
 			name: "ntHash",
 			cfg: config{
-				hashType:      "nthash",
+				hashTypes:     []string{"nthash"}
 				noFileName:    false,
 				caseSensitive: false,
 				inputFileName: "test.fasta",
