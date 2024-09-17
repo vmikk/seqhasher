@@ -284,6 +284,7 @@ func TestGetHashFunc(t *testing.T) {
 		{"cityhash", "7ee08b0605f909cf400644ddb3b8b80b"},
 		{"murmur3", "da48f168029d0eff17c81eff7624a72f"},
 		{"nthash", "508876b331232519"},
+		{"blake3", "fe31e49d18b8883e7167198f770b98bba33b533cc12a9bb63ab264e5b70a347a"},
 	}
 
 	for _, tt := range tests {
