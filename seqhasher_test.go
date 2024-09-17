@@ -123,6 +123,7 @@ func TestIsValidHashType(t *testing.T) {
 		{"cityhash", true},
 		{"murmur3", true},
 		{"nthash", true},
+		{"blake3", true},
 		{"invalid", false},
 	}
 
