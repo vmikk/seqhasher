@@ -9,6 +9,7 @@ require (
 	github.com/shenwei356/bio v0.13.5
 	github.com/spaolacci/murmur3 v1.1.0
 	github.com/will-rowe/nthash v0.4.0
+	github.com/zeebo/blake3 v0.2.4
 )
 
 require (
@@ -23,7 +24,6 @@ require (
 	github.com/shenwei356/util v0.5.3 // indirect
 	github.com/shenwei356/xopen v0.3.2 // indirect
 	github.com/ulikunitz/xz v0.5.12 // indirect
-	github.com/zeebo/blake3 v0.2.4 // indirect
 	golang.org/x/sys v0.25.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
