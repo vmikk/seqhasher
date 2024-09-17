@@ -32,7 +32,7 @@ import (
 )
 
 const (
-	version         = "1.0.2" // Version of the program
+	version         = "1.1.0" // Version of the program
 	defaultHashType = "sha1"  // Default hash type
 )
 
