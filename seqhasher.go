@@ -176,7 +176,7 @@ func printUsage() {
 		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-v"), color.HiMagentaString("--version"), color.WhiteString("       Print the version of the program and exit"))
 		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-h"), color.HiMagentaString("--help"), color.WhiteString("          Show this help message and exit"))
 		fmt.Println(color.HiCyanString("\nArguments:"))
-		fmt.Printf("  %s %s\n", color.HiMagentaString("<input_file>"), color.WhiteString("    The path to the input FASTA file or '-' for standard input (stdin)"))
+		fmt.Printf("  %s %s\n", color.HiMagentaString("<input_file>"), color.WhiteString("    The path to the input FASTA file (could be compressed with gzip, zstd, xz, or bzip2) or '-' for standard input (stdin)"))
 		fmt.Printf("  %s %s\n", color.HiMagentaString("[output_file]"), color.WhiteString("   The path to the output file or '-' for standard output (stdout)"))
 		fmt.Println(color.WhiteString("                   If omitted, defaults to stdout."))
 		fmt.Println(color.HiCyanString("\nExamples:"))
