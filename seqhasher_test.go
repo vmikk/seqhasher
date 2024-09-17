@@ -95,6 +95,14 @@ func TestParseFlags(t *testing.T) {
 				outputFileName: "output.fasta",
 			},
 		},
+		{
+			name: "Multiple hash types",
+			args: []string{"cmd", "-hash", "sha1,xxhash", "input.fasta"},
+			expected: config{
+				hashTypes:     []string{"sha1", "xxhash"},
+				inputFileName: "input.fasta",
+			},
+		},
 	}
 
 	for _, tt := range tests {
