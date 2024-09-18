@@ -45,6 +45,12 @@ jobs:
     - name: Run TestGetHashFunc
       run: go test -v -run TestGetHashFunc
 
+    - name: Run TestMainFunction
+      run: go test -v -run TestMainFunction
+
+    - name: Run TestGetInputError
+      run: go test -v -run TestGetInputError
+
 
     - name: Upload test results
       uses: actions/upload-artifact@v3
