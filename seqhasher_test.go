@@ -133,6 +133,7 @@ func TestIsValidHashType(t *testing.T) {
 		{"nthash", true},
 		{"blake3", true},
 		{"invalid", false},
+		{"", false},
 	}
 
 	for _, tt := range tests {
