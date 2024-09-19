@@ -310,6 +310,72 @@ func TestGetHashFunc(t *testing.T) {
 	}
 }
 
+// Test if the output of compressed input files matches the output of the non-compressed input
+func TestCompressedInput(t *testing.T) {
+	logger := &testLogger{t}
+	// Define the non-compressed input
+	nonCompressedInput := "test.fasta"
+	expectedOutput := "65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq1\n" +
+		"65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq1_lowercase\n" +
+		"e3da52abc8fbdb38b113a187ed0ac763fa86d1d4;seq2\n"
+
+	// List of compressed files to test
+	compressedFiles := []string{
+		"./test/test.fasta.gz",
+		"./test/test.fasta.bz2",
+		"./test/test.fasta.xz",
+		"./test/test.fasta.zst",
+	}
+
+	// Test non-compressed input
+	t.Run("NonCompressed", func(t *testing.T) {
+		logger.Logf(colorize(colorYellow, "Testing non-compressed input: %s"), nonCompressedInput)
+		input := strings.NewReader(testSequences)
+		output := &bytes.Buffer{}
+		processSequences(input, output, config{
+			hashTypes:     []string{"sha1"},
+			noFileName:    true,
+			headersOnly:   true,
+			caseSensitive: false,
+			inputFileName: nonCompressedInput,
+		})
+		got := output.String()
+		if got != expectedOutput {
+			t.Errorf("\nProcessSequences failed for %s\nGot:\n%s\nWant:\n%s",
+				nonCompressedInput, got, expectedOutput)
+			failedTests = append(failedTests, "ProcessSequences/NonCompressed")
+		}
+	})
+
+	// Test each compressed input
+	for _, fileName := range compressedFiles {
+		t.Run(fileName, func(t *testing.T) {
+			logger.Logf(colorize(colorYellow, "Testing compressed input: %s"), fileName)
+			input, err := getInput(fileName)
+			if err != nil {
+				t.Errorf("getInput() error = %v", err)
+				return
+			}
+			defer input.Close()
+
+			output := &bytes.Buffer{}
+			processSequences(input, output, config{
+				hashTypes:     []string{"sha1"},
+				noFileName:    true,
+				headersOnly:   true,
+				caseSensitive: false,
+				inputFileName: fileName,
+			})
+			got := output.String()
+			if got != expectedOutput {
+				t.Errorf("\nProcessSequences failed for %s\nGot:\n%s\nWant:\n%s",
+					fileName, got, expectedOutput)
+				failedTests = append(failedTests, "ProcessSequences/"+fileName)
+			}
+		})
+	}
+}
+
 // Run the tests
 // + set up a test FASTA file if it doesn't exist
 func TestMain(m *testing.M) {
