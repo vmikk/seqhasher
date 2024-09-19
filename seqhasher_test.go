@@ -421,6 +421,7 @@ func TestAll(t *testing.T) {
 	t.Run("GetOutput", TestGetOutput)
 	t.Run("ProcessSequences", TestProcessSequences)
 	t.Run("GetHashFunc", TestGetHashFunc)
+	t.Run("CompressedInput", TestCompressedInput)
 	t.Run("MainFunction", TestMainFunction)
 
 	// Check for test failures
