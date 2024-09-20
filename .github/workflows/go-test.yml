@@ -54,6 +54,9 @@ jobs:
     - name: Run TestGetOutputError
       run: go test -v -run TestGetOutputError
 
+    - name: Run TestPrintUsage
+      run: go test -v -run TestPrintUsage
+
     - name: Upload test results
       uses: actions/upload-artifact@v3
       with:
