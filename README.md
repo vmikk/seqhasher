@@ -71,6 +71,13 @@ cf40b5b72bc43e77;seq1
 704b34bf20faedf2;seq2
 42a70d1abf84bf32;seq3
 ```
+
+Multiple hashes (useful to ensure absence of collisions):
+`seqhasher --headersonly --nofilename --hash sha1,xxhash --casesensitive input.fasta -`
+```
+e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;cf40b5b72bc43e77;seq1
+65c89f59d38cdbf90dfaf0b0a6884829df8396b0;704b34bf20faedf2;seq2
+70c881d4a26984ddce795f6f71817c9cf4480e79;42a70d1abf84bf32;seq3
 ```
 
 ## Usage
