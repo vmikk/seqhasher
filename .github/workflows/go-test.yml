@@ -45,6 +45,9 @@ jobs:
     - name: Run TestGetHashFunc
       run: go test -v -run TestGetHashFunc
 
+    - name: Run TestCompressedInput
+      run: go test -v -run TestCompressedInput
+
     - name: Run TestMainFunction
       run: go test -v -run TestMainFunction
 
