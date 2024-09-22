@@ -93,7 +93,7 @@ func parseFlags() config {
 	flag.BoolVar(&cfg.headersOnly, "o", false, "Output only headers (shorthand)")
 
 	var hashTypesString string
-	flag.StringVar(&hashTypesString, "hash", defaultHashType, "Hash type(s) (comma-separated: sha1, md5, xxhash, cityhash, murmur3, nthash, blake3)")
+	flag.StringVar(&hashTypesString, "hash", defaultHashType, "Hash type(s) (comma-separated: sha1, sha3, md5, xxhash, cityhash, murmur3, nthash, blake3)")
 	flag.StringVar(&hashTypesString, "H", defaultHashType, "Hash type(s) (shorthand)")
 
 	flag.BoolVar(&cfg.noFileName, "nofilename", false, "Do not include file name in output")
@@ -170,7 +170,7 @@ func printUsage() {
 		fmt.Println(color.WhiteString("  For input/output via stdin/stdout, use '-' instead of the file name."))
 		fmt.Println(color.HiCyanString("\nOptions:"))
 		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-o"), color.HiMagentaString("--headersonly"), color.WhiteString("   Only output sequence headers, excluding the sequences themselves"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-H"), color.HiMagentaString("--hash <type1,type2,...>"), color.WhiteString("   Hash algorithm(s): sha1 (default), md5, xxhash, cityhash, murmur3, nthash, blake3"))
+		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-H"), color.HiMagentaString("--hash <type1,type2,...>"), color.WhiteString("   Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3"))
 		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-n"), color.HiMagentaString("--nofilename"), color.WhiteString("    Omit the file name from the sequence header"))
 		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-c"), color.HiMagentaString("--casesensitive"), color.WhiteString(" Take into account sequence case. By default, sequences are converted to uppercase"))
 		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-f"), color.HiMagentaString("--name <text>"), color.WhiteString("   Replace the input file's name in the header with <text>"))
