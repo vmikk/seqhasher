@@ -26,6 +26,7 @@ import (
 	"github.com/go-faster/city"
 	"github.com/spaolacci/murmur3"
 	"github.com/zeebo/blake3"
+	"golang.org/x/crypto/sha3"
 
 	"github.com/fatih/color"
 	"github.com/will-rowe/nthash"
@@ -36,7 +37,7 @@ const (
 	defaultHashType = "sha1"  // Default hash type
 )
 
-var supportedHashTypes = []string{"sha1", "md5", "xxhash", "cityhash", "murmur3", "nthash", "blake3"}
+var supportedHashTypes = []string{"sha1", "sha3", "md5", "xxhash", "cityhash", "murmur3", "nthash", "blake3"}
 
 // Configuration structure (flags)
 type config struct {
@@ -278,6 +279,13 @@ func getHashFunc(hashType string) func([]byte) string {
 		}
 
 		switch hashType {
+
+		case "sha1":
+			hash := sha1.Sum(data)
+			return hex.EncodeToString(hash[:])
+		case "sha3":
+			hash := sha3.Sum512(data)
+			return hex.EncodeToString(hash[:])
 		case "md5":
 			hash := md5.Sum(data)
 			return hex.EncodeToString(hash[:])
