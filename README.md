@@ -9,7 +9,8 @@
 ## Features
 
 - Fast processing of FASTA files (thanks to [shenwei356/bio](https://github.com/shenwei356/bio) package)
-- Support for multiple hash algorithms: SHA1, MD5, xxHash, CityHash, MurmurHash3, ntHash, and BLAKE3
+- Support for multiple hash algorithms: SHA-1, SHA-3, MD5, xxHash, CityHash, MurmurHash3, ntHash, and BLAKE3
+- Automatic support for compressed input files (`gzip`, `zstd`, `xz`, and `bzip2`)
 - Supports reading from STDIN and writing to STDOUT
 - Option to output only headers or full sequences
 - Case-sensitive hashing option
