@@ -109,7 +109,8 @@ and similarly, it can write the output to a specified file or standard output (`
 The `--name` option allows to customize the header of the output by specifying 
 a text to replace the input file name.
 
-The `--hash` option allows to specify which hash function to use. 
+The `--hash` option allows to specify which hash function to use 
+(multiple coma-separated values allowed, e.g., `--hash sha1,nthash`). 
 Currently, the following hash functions are supported:  
 - `sha1`: [SHA-1](https://en.wikipedia.org/wiki/SHA-1) (default), 160-bit hash value
 - `md5`: [MD5](https://en.wikipedia.org/wiki/MD5), 128-bit hash value
