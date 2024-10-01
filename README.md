@@ -113,8 +113,9 @@ The `--hash` option allows to specify which hash function to use
 (multiple coma-separated values allowed, e.g., `--hash sha1,nthash`). 
 Currently, the following hash functions are supported:  
 - `sha1`: [SHA-1](https://en.wikipedia.org/wiki/SHA-1) (default), 160-bit hash value
+- `sha3`: [SHA-3](https://en.wikipedia.org/wiki/SHA-3), Keccak-based secure cryptographic hash standard, 512-bit hash value
 - `md5`: [MD5](https://en.wikipedia.org/wiki/MD5), 128-bit hash value
-- `xxhash`: xxHash ([extremely fast](https://xxhash.com/)), 64-bit hash value
+- `xxhash`: [xxHash](https://xxhash.com/), extremely fast algorithm, 64-bit hash value
 - `cityhash`: [CityHash](https://opensource.googleblog.com/2011/04/introducing-cityhash.html) (e.g., used in [VSEARCH](https://github.com/torognes/vsearch/)), 128-bit hash value
 - `murmur3`: [Murmur3](https://en.wikipedia.org/wiki/MurmurHash) (e.g., used in [Sourmash](https://github.com/sourmash-bio/sourmash), but 64-bit), 128-bit hash value
 - `nthash`: [ntHash](https://github.com/bcgsc/ntHash) (designed for DNA sequences), 64-bit hash value. This implementation uses the full length of the sequence as the k-mer size, effectively hashing the entire sequence at once using the non-canonical (forward) hash of the sequence
