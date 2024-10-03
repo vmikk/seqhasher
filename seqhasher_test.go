@@ -126,6 +126,7 @@ func TestIsValidHashType(t *testing.T) {
 		want     bool
 	}{
 		{"sha1", true},
+		{"sha3", true},
 		{"md5", true},
 		{"xxhash", true},
 		{"cityhash", true},
