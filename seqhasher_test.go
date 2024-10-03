@@ -290,6 +290,7 @@ func TestGetHashFunc(t *testing.T) {
 		expected string
 	}{
 		{"sha1", "65c89f59d38cdbf90dfaf0b0a6884829df8396b0"},
+		{"sha3", "01eb915e4d8b6d44d0432c12dfdb949c1da1f37c295a653b8761a1e46ed2d76cb0c297d612af809b9691d341cad536df912cbba6e95a93380cdc9f545d9bfdcc"},
 		{"md5", "86bfb9f78dd8b6cd35962bb7324fdbf8"},
 		{"xxhash", "704b34bf20faedf2"},
 		{"cityhash", "7ee08b0605f909cf400644ddb3b8b80b"},
