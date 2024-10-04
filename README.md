@@ -186,7 +186,11 @@ hyperfine \
   'seqhasher --headersonly --casesensitive --hash md5      big.fasta - > /dev/null' \
   'seqhasher --headersonly --casesensitive --hash xxhash   big.fasta - > /dev/null' \
   'seqhasher --headersonly --casesensitive --hash cityhash big.fasta - > /dev/null' \
-  'seqhasher --headersonly --casesensitive --hash murmur3  big.fasta - > /dev/null'
+  'seqhasher --headersonly --casesensitive --hash murmur3  big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash nthash   big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash blake3   big.fasta - > /dev/null' \
+  'seqhasher --headersonly --hash sha1,blake3    big.fasta - > /dev/null' \
+  'seqhasher --headersonly --hash xxhash,murmur3 big.fasta - > /dev/null'
 ```
 
 | Command    |      Mean [s] | Min [s] | Max [s] |    Relative |
