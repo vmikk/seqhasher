@@ -472,24 +472,74 @@ func TestGetOutputError(t *testing.T) {
 }
 
 func TestPrintUsage(t *testing.T) {
-	// Redirect stderr to capture output
-	oldStderr := os.Stderr
-	r, w, _ := os.Pipe()
-	os.Stderr = w
+	runTest(t, "PrintUsage", func(t *testing.T) {
+		logger := &testLogger{t}
+		logger.Logf(colorize(colorYellow, "Testing printUsage function"))
 
-	printUsage()
+		// Test regular usage
+		t.Run("RegularUsage", func(t *testing.T) {
+			// Redirect stderr to capture output
+			oldStderr := os.Stderr
+			r, w, _ := os.Pipe()
+			os.Stderr = w
 
-	// Restore stderr
-	w.Close()
-	os.Stderr = oldStderr
+			printUsage()
 
-	// Read captured output
-	var buf bytes.Buffer
-	io.Copy(&buf, r)
-	output := buf.String()
+			// Restore stderr
+			w.Close()
+			os.Stderr = oldStderr
 
-	// Check if usage information is printed
-	if !strings.Contains(output, "Usage:") || !strings.Contains(output, "Options:") {
-		t.Errorf("Expected usage information, got: %s", output)
-	}
+			// Read captured output
+			var buf bytes.Buffer
+			io.Copy(&buf, r)
+			output := buf.String()
+
+			// Check if usage information is printed
+			if !strings.Contains(output, "Usage:") || !strings.Contains(output, "Options:") {
+				t.Errorf("Expected usage information, got: %s", output)
+			}
+		})
+
+		// Test detailed help
+		t.Run("DetailedHelp", func(t *testing.T) {
+			// Save old args and set new ones
+			oldArgs := os.Args
+			os.Args = []string{"cmd", "--help"}
+			defer func() { os.Args = oldArgs }()
+
+			// Redirect stdout to capture output
+			oldStdout := os.Stdout
+			r, w, _ := os.Pipe()
+			os.Stdout = w
+
+			printUsage()
+
+			// Restore stdout
+			w.Close()
+			os.Stdout = oldStdout
+
+			// Read captured output
+			var buf bytes.Buffer
+			io.Copy(&buf, r)
+			output := buf.String()
+
+			// Check if detailed help information is printed
+			expectedStrings := []string{
+				"SeqHasher",
+				"DNA Sequence Hashing Tool",
+				"version:",
+				"Usage:",
+				"Overview:",
+				"Options:",
+				"Arguments:",
+				"Examples:",
+			}
+
+			for _, str := range expectedStrings {
+				if !strings.Contains(output, str) {
+					t.Errorf("Expected detailed help to contain '%s', but it was not found", str)
+				}
+			}
+		})
+	})
 }
