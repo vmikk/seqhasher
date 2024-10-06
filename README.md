@@ -206,10 +206,15 @@ hyperfine \
 | xxhash+murmur3 | 2.273 ± 0.237 |   2.070 |   2.819 | 2.26 ± 0.27 |
 `Values are in seconds per 500,000 sequences (756,622,201 bp)`
 
-As shown, xxHash and MurmurHash3 offer the best performance, while MD5 is the slowest among the tested algorithms.
+As shown, xxHash and MurmurHash3 offer the best performance. 
 
+> [!NOTE]
+> However, it's important to note that these values may depend on 
+> the instruction set of the CPU being used, as some processors may 
+> optimize specific algorithms differently (e.g., via `SIMD` or other hardware acceleration). 
+> For example, modern CPUs may use **SHA Extensions** to accelerate SHA-family algorithms. 
+> Additionally, the performance reported here is tied to the particular implementations 
+> of the hash algorithms used in `seqhasher`. Other implementations may yield different results, 
+> and these values should not be interpreted as a definitive ranking of the algorithms themselves.
 
-### Processing large file
-
-Compare an `AWK`-based solution against the `seqhasher` binary.
 
