@@ -204,6 +204,7 @@ hyperfine \
 | blake3         | 1.707 ± 0.024 |   1.662 |   1.731 | 1.70 ± 0.10 |
 | sha1+blake3    | 3.672 ± 0.214 |   3.424 |   3.921 | 3.65 ± 0.30 |
 | xxhash+murmur3 | 2.273 ± 0.237 |   2.070 |   2.819 | 2.26 ± 0.27 |
+
 `Values are in seconds per 500,000 sequences (756,622,201 bp)`
 
 As shown, xxHash and MurmurHash3 offer the best performance. 
