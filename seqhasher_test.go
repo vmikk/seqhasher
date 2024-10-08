@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io"
 	"os"
 	"reflect"
 	"strings"
@@ -174,6 +173,7 @@ func TestGetInput(t *testing.T) {
 			}
 		})
 	}
+	// defer os.Remove("nonexistent.fasta")
 }
 
 // Test if the output file is correctly handled
@@ -442,31 +442,27 @@ func TestMainFunction(t *testing.T) {
 		name           string
 		args           []string
 		expectedOutput string
-		expectedError  bool
-		checkUsage     bool
+		expectedError  string
 	}{
 		{
 			name:           "Version flag",
 			args:           []string{"cmd", "-version"},
 			expectedOutput: fmt.Sprintf("SeqHasher %s\n", version),
-			expectedError:  false,
 		},
 		{
-			name:       "No input file",
-			args:       []string{"cmd"},
-			checkUsage: true,
+			name:           "No input file",
+			args:           []string{"cmd"},
+			expectedOutput: "Usage:", // Just check for the beginning of usage info
 		},
 		{
-			name:           "Non-existent input file",
-			args:           []string{"cmd", "nonexistent_file.fasta"},
-			expectedOutput: "Error opening input: open nonexistent_file.fasta: no such file or directory\n",
-			expectedError:  true,
+			name:          "Non-existent input file",
+			args:          []string{"cmd", "nonexistent_file.fasta"},
+			expectedError: "Error opening input: open nonexistent_file.fasta: no such file or directory",
 		},
 		{
 			name:           "Valid input file",
 			args:           []string{"cmd", testFastaPath},
-			expectedOutput: "", // The actual output will be the processed sequences
-			expectedError:  false,
+			expectedOutput: ";seq1\n", // Check for processed sequence
 		},
 	}
 
@@ -479,50 +475,28 @@ func TestMainFunction(t *testing.T) {
 			oldArgs := os.Args
 			os.Args = tt.args
 
-			// Capture stdout and stderr
-			oldStdout := os.Stdout
-			oldStderr := os.Stderr
-			r, w, _ := os.Pipe()
-			os.Stdout = w
-			os.Stderr = w
-
-			// Call run() instead of main()
-			output := run()
-
-			// Restore stdout and stderr
-			w.Close()
-			os.Stdout = oldStdout
-			os.Stderr = oldStderr
-
-			// Read captured output
+			// Prepare a buffer to capture output
 			var buf bytes.Buffer
-			io.Copy(&buf, r)
-			capturedOutput := buf.String()
+
+			// Call run() with our buffer
+			err := run(&buf)
 
 			// Restore arguments
 			os.Args = oldArgs
 
-			// Check output
-			if tt.expectedError {
-				if output != tt.expectedOutput {
-					t.Errorf("Expected error output %q, got %q", tt.expectedOutput, output)
+			// Check error
+			if tt.expectedError != "" {
+				if err == nil || err.Error() != tt.expectedError {
+					t.Errorf("Expected error %q, got %v", tt.expectedError, err)
 				}
-			} else if tt.checkUsage {
-				if !strings.Contains(capturedOutput, "Usage:") {
-					t.Errorf("Expected usage information, but it was not printed")
-				}
-			} else {
-				if tt.expectedOutput != "" && output != tt.expectedOutput {
-					t.Errorf("Expected output %q, got %q", tt.expectedOutput, output)
-				}
-				if tt.expectedOutput == "" && output == "" {
-					t.Errorf("Expected non-empty output, got empty string")
-				}
+			} else if err != nil {
+				t.Errorf("Unexpected error: %v", err)
 			}
 
-			// For the "Valid input file" case, check if the output contains processed sequences
-			if tt.name == "Valid input file" && !strings.Contains(output, ";seq1\n") {
-				t.Errorf("Expected processed sequences in output, but they were not found")
+			// Check output
+			output := buf.String()
+			if !strings.Contains(output, tt.expectedOutput) {
+				t.Errorf("Expected output to contain %q, got %q", tt.expectedOutput, output)
 			}
 		})
 	}
@@ -556,20 +530,8 @@ func TestPrintUsage(t *testing.T) {
 
 		// Test regular usage
 		t.Run("RegularUsage", func(t *testing.T) {
-			// Redirect stderr to capture output
-			oldStderr := os.Stderr
-			r, w, _ := os.Pipe()
-			os.Stderr = w
-
-			printUsage()
-
-			// Restore stderr
-			w.Close()
-			os.Stderr = oldStderr
-
-			// Read captured output
 			var buf bytes.Buffer
-			io.Copy(&buf, r)
+			printUsage(&buf)
 			output := buf.String()
 
 			// Check if usage information is printed
@@ -585,20 +547,8 @@ func TestPrintUsage(t *testing.T) {
 			os.Args = []string{"cmd", "--help"}
 			defer func() { os.Args = oldArgs }()
 
-			// Redirect stdout to capture output
-			oldStdout := os.Stdout
-			r, w, _ := os.Pipe()
-			os.Stdout = w
-
-			printUsage()
-
-			// Restore stdout
-			w.Close()
-			os.Stdout = oldStdout
-
-			// Read captured output
 			var buf bytes.Buffer
-			io.Copy(&buf, r)
+			printUsage(&buf)
 			output := buf.String()
 
 			// Check if detailed help information is printed
