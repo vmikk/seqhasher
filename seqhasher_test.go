@@ -415,6 +415,11 @@ func TestMain(m *testing.M) {
 // Global slice to store names of failed tests
 var failedTests []string
 
+// Initialize failedTests slice
+func init() {
+	failedTests = make([]string, 0)
+}
+
 // TestAll runs all tests and captures failures
 func TestAll(t *testing.T) {
 	t.Run("ParseFlags", TestParseFlags)
