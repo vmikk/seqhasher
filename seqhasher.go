@@ -51,39 +51,33 @@ type config struct {
 	showVersion    bool
 }
 
-func run() string {
+func run(w io.Writer) error {
 	cfg := parseFlags()
 
 	if cfg.showVersion {
-		return fmt.Sprintf("SeqHasher %s\n", version)
+		fmt.Fprintf(w, "SeqHasher %s\n", version)
+		return nil
 	}
 
 	if cfg.inputFileName == "" {
-		var buf bytes.Buffer
-		printUsage()
-		return buf.String()
+		printUsage(w)
+		return nil
 	}
 
 	input, err := getInput(cfg.inputFileName)
 	if err != nil {
-		return fmt.Sprintf("Error opening input: %v\n", err)
+		return fmt.Errorf("Error opening input: %v", err)
 	}
 	defer input.Close()
 
-	var outputBuffer bytes.Buffer
-	output := bufio.NewWriter(&outputBuffer)
-
-	processSequences(input, output, cfg)
-
-	if err := output.Flush(); err != nil {
-		return fmt.Sprintf("Error flushing output: %v\n", err)
-	}
-
-	return outputBuffer.String()
+	return processSequences(input, w, cfg)
 }
 
 func main() {
-	fmt.Print(run())
+	if err := run(os.Stdout); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
 }
 
 func parseFlags() config {
@@ -108,7 +102,9 @@ func parseFlags() config {
 	flag.BoolVar(&cfg.showVersion, "version", false, "Show version information")
 	flag.BoolVar(&cfg.showVersion, "v", false, "Show version information (shorthand)")
 
-	flag.Usage = printUsage
+	flag.Usage = func() {
+		printUsage(os.Stderr)
+	}
 	flag.Parse()
 
 	args := flag.Args()
@@ -154,54 +150,54 @@ func getOutput(fileName string) (io.WriteCloser, error) {
 	return os.Create(fileName)
 }
 
-func printUsage() {
+func printUsage(w io.Writer) {
 	if len(os.Args) > 1 && (os.Args[1] == "-h" || os.Args[1] == "--help") {
-		fmt.Printf("\n%s%s%s\n",
+		fmt.Fprintf(w, "\n%s%s%s\n",
 			color.HiGreenString("SeqHasher"),
 			color.WhiteString(" : "),
 			color.HiMagentaString("DNA Sequence Hashing Tool"))
-		fmt.Printf("%s  %s\n", color.HiCyanString("version:"), color.WhiteString(version))
-		fmt.Println(color.WhiteString("====================================="))
-		fmt.Println(color.HiCyanString("Usage:"))
-		fmt.Printf("  %s\n", color.WhiteString("seqhasher [options] <input_file> [output_file]"))
-		fmt.Println(color.HiCyanString("\nOverview:"))
-		fmt.Println(color.WhiteString("  SeqHasher takes DNA sequences from a FASTA file, computes a hash digest for each sequence,"))
-		fmt.Println(color.WhiteString("  and generates an output file with modified sequences."))
-		fmt.Println(color.WhiteString("  For input/output via stdin/stdout, use '-' instead of the file name."))
-		fmt.Println(color.HiCyanString("\nOptions:"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-o"), color.HiMagentaString("--headersonly"), color.WhiteString("   Only output sequence headers, excluding the sequences themselves"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-H"), color.HiMagentaString("--hash <type1,type2,...>"), color.WhiteString("   Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-n"), color.HiMagentaString("--nofilename"), color.WhiteString("    Omit the file name from the sequence header"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-c"), color.HiMagentaString("--casesensitive"), color.WhiteString(" Take into account sequence case. By default, sequences are converted to uppercase"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-f"), color.HiMagentaString("--name <text>"), color.WhiteString("   Replace the input file's name in the header with <text>"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-v"), color.HiMagentaString("--version"), color.WhiteString("       Print the version of the program and exit"))
-		fmt.Printf("  %s, %s %s\n", color.HiMagentaString("-h"), color.HiMagentaString("--help"), color.WhiteString("          Show this help message and exit"))
-		fmt.Println(color.HiCyanString("\nArguments:"))
-		fmt.Printf("  %s %s\n", color.HiMagentaString("<input_file>"), color.WhiteString("    The path to the input FASTA file (could be compressed with gzip, zstd, xz, or bzip2) or '-' for standard input (stdin)"))
-		fmt.Printf("  %s %s\n", color.HiMagentaString("[output_file]"), color.WhiteString("   The path to the output file or '-' for standard output (stdout)"))
-		fmt.Println(color.WhiteString("                   If omitted, defaults to stdout."))
-		fmt.Println(color.HiCyanString("\nExamples:"))
-		fmt.Println(color.WhiteString("  seqhasher input.fasta.gz output.fasta"))
-		fmt.Println(color.WhiteString("  cat input.fasta | seqhasher --name 'Sample' --hash xxhash - - > output.fasta"))
-		fmt.Println(color.WhiteString("  seqhasher --headersonly --nofilename --hash sha1,nthash input.fa.gz - > headers.txt"))
+		fmt.Fprintf(w, "%s  %s\n", color.HiCyanString("version:"), color.WhiteString(version))
+		fmt.Fprintln(w, color.WhiteString("====================================="))
+		fmt.Fprintln(w, color.HiCyanString("Usage:"))
+		fmt.Fprintf(w, "  %s\n", color.WhiteString("seqhasher [options] <input_file> [output_file]"))
+		fmt.Fprintln(w, color.HiCyanString("\nOverview:"))
+		fmt.Fprintln(w, color.WhiteString("  SeqHasher takes DNA sequences from a FASTA file, computes a hash digest for each sequence,"))
+		fmt.Fprintln(w, color.WhiteString("  and generates an output file with modified sequences."))
+		fmt.Fprintln(w, color.WhiteString("  For input/output via stdin/stdout, use '-' instead of the file name."))
+		fmt.Fprintln(w, color.HiCyanString("\nOptions:"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-o"), color.HiMagentaString("--headersonly"), color.WhiteString("   Only output sequence headers, excluding the sequences themselves"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-H"), color.HiMagentaString("--hash <type1,type2,...>"), color.WhiteString("   Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-n"), color.HiMagentaString("--nofilename"), color.WhiteString("    Omit the file name from the sequence header"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-c"), color.HiMagentaString("--casesensitive"), color.WhiteString(" Take into account sequence case. By default, sequences are converted to uppercase"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-f"), color.HiMagentaString("--name <text>"), color.WhiteString("   Replace the input file's name in the header with <text>"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-v"), color.HiMagentaString("--version"), color.WhiteString("       Print the version of the program and exit"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-h"), color.HiMagentaString("--help"), color.WhiteString("          Show this help message and exit"))
+		fmt.Fprintln(w, color.HiCyanString("\nArguments:"))
+		fmt.Fprintf(w, "  %s %s\n", color.HiMagentaString("<input_file>"), color.WhiteString("    The path to the input FASTA file (could be compressed with gzip, zstd, xz, or bzip2) or '-' for standard input (stdin)"))
+		fmt.Fprintf(w, "  %s %s\n", color.HiMagentaString("[output_file]"), color.WhiteString("   The path to the output file or '-' for standard output (stdout)"))
+		fmt.Fprintln(w, color.WhiteString("                   If omitted, defaults to stdout."))
+		fmt.Fprintln(w, color.HiCyanString("\nExamples:"))
+		fmt.Fprintln(w, color.WhiteString("  seqhasher input.fasta.gz output.fasta"))
+		fmt.Fprintln(w, color.WhiteString("  cat input.fasta | seqhasher --name 'Sample' --hash xxhash - - > output.fasta"))
+		fmt.Fprintln(w, color.WhiteString("  seqhasher --headersonly --nofilename --hash sha1,nthash input.fa.gz - > headers.txt"))
 	} else {
-		fmt.Fprintf(os.Stderr, "SeqHasher v%s\n", version)
-		fmt.Fprintf(os.Stderr, "Usage: %s [options] <input_file> [output_file]\n", os.Args[0])
-		fmt.Fprintf(os.Stderr, "Options:\n")
+		fmt.Fprintf(w, "SeqHasher v%s\n", version)
+		fmt.Fprintf(w, "Usage: %s [options] <input_file> [output_file]\n", os.Args[0])
+		fmt.Fprintf(w, "Options:\n")
 		flag.PrintDefaults()
-		fmt.Fprintf(os.Stderr, "\nSupported hash types: %s\n", strings.Join(supportedHashTypes, ", "))
-		fmt.Fprintf(os.Stderr, "If input_file is '-' or omitted, reads from stdin.\n")
-		fmt.Fprintf(os.Stderr, "If output_file is '-' or omitted, writes to stdout.\n")
-		fmt.Fprintf(os.Stderr, "\nFor more detailed help, use -h or --help.\n")
+		fmt.Fprintf(w, "\nSupported hash types: %s\n", strings.Join(supportedHashTypes, ", "))
+		fmt.Fprintf(w, "If input_file is '-' or omitted, reads from stdin.\n")
+		fmt.Fprintf(w, "If output_file is '-' or omitted, writes to stdout.\n")
+		fmt.Fprintf(w, "\nFor more detailed help, use -h or --help.\n")
 	}
 }
 
-func processSequences(input io.Reader, output io.Writer, cfg config) {
+func processSequences(input io.Reader, output io.Writer, cfg config) error {
 	writer := bufio.NewWriter(output)
 
 	reader, err := fastx.NewReaderFromIO(seq.DNA, bufio.NewReader(input), fastx.DefaultIDRegexp)
 	if err != nil {
-		log.Fatalf("Failed to create reader: %v", err)
+		return fmt.Errorf("Failed to create reader: %v", err)
 	}
 	defer reader.Close() // Close the reader after processing
 
@@ -223,8 +219,7 @@ func processSequences(input io.Reader, output io.Writer, cfg config) {
 			if err == io.EOF {
 				break
 			}
-			log.Printf("Error reading record: %v", err)
-			continue
+			return fmt.Errorf("Error reading record: %v", err)
 		}
 
 		seq := record.Seq.Seq
@@ -252,21 +247,17 @@ func processSequences(input io.Reader, output io.Writer, cfg config) {
 		if cfg.headersOnly {
 			// Output only the header, without the '>' sign, if `--headersonly` is enabled
 			if _, err := fmt.Fprintf(writer, "%s\n", modifiedHeader); err != nil {
-				log.Printf("Error writing header: %v", err)
-				continue
+				return fmt.Errorf("Error writing header: %v", err)
 			}
 		} else {
 			// Output the full record
 			if _, err := fmt.Fprintf(writer, ">%s\n%s\n", modifiedHeader, seq); err != nil {
-				log.Printf("Error writing record: %v", err)
-				continue
+				return fmt.Errorf("Error writing record: %v", err)
 			}
 		}
 	}
 
-	if err := writer.Flush(); err != nil {
-		log.Fatalf("Error flushing output: %v", err)
-	}
+	return writer.Flush()
 }
 
 // getHashFunc returns a function that takes a byte slice and returns a hex string
