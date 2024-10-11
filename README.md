@@ -182,11 +182,12 @@ The size of the file is ~760MB.
 hyperfine \
   --runs 10 --warmup 3 \
   --export-markdown hashing_benchmark.md \
-  'seqhasher --headersonly --casesensitive --hash sha1     big.fasta - > /dev/null' \
   'seqhasher --headersonly --casesensitive --hash md5      big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash sha1     big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash sha3     big.fasta - > /dev/null' \
   'seqhasher --headersonly --casesensitive --hash xxhash   big.fasta - > /dev/null' \
-  'seqhasher --headersonly --casesensitive --hash cityhash big.fasta - > /dev/null' \
   'seqhasher --headersonly --casesensitive --hash murmur3  big.fasta - > /dev/null' \
+  'seqhasher --headersonly --casesensitive --hash cityhash big.fasta - > /dev/null' \
   'seqhasher --headersonly --casesensitive --hash nthash   big.fasta - > /dev/null' \
   'seqhasher --headersonly --casesensitive --hash blake3   big.fasta - > /dev/null' \
   'seqhasher --headersonly --hash sha1,blake3    big.fasta - > /dev/null' \
