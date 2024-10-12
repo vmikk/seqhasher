@@ -52,7 +52,10 @@ type config struct {
 }
 
 func run(w io.Writer) error {
-	cfg := parseFlags()
+	cfg, err := parseFlags()
+	if err != nil {
+		return err
+	}
 
 	if cfg.showVersion {
 		fmt.Fprintf(w, "SeqHasher %s\n", version)
@@ -74,13 +77,42 @@ func run(w io.Writer) error {
 }
 
 func main() {
-	if err := run(os.Stdout); err != nil {
-		fmt.Fprintf(os.Stderr, "%v\n", err)
-		os.Exit(1)
+	cfg, err := parseFlags()
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+
+	if cfg.showVersion {
+		fmt.Printf("SeqHasher %s\n", version)
+		return
+	}
+
+	if cfg.inputFileName == "" {
+		printUsage(os.Stderr)
+		return
+	}
+
+	input, err := getInput(cfg.inputFileName)
+	if err != nil {
+		log.Fatalf("Error opening input: %v", err)
+	}
+	defer input.Close()
+
+	var output io.WriteCloser = os.Stdout
+	if cfg.outputFileName != "" && cfg.outputFileName != "-" {
+		output, err = getOutput(cfg.outputFileName)
+		if err != nil {
+			log.Fatalf("Error opening output: %v", err)
+		}
+		defer output.Close()
+	}
+
+	if err := processSequences(input, output, cfg); err != nil {
+		log.Fatalf("Error processing sequences: %v", err)
 	}
 }
 
-func parseFlags() config {
+func parseFlags() (config, error) {
 	cfg := config{}
 
 	flag.BoolVar(&cfg.headersOnly, "headersonly", false, "Output only headers")
@@ -123,7 +155,7 @@ func parseFlags() config {
 		}
 	}
 
-	return cfg
+	return cfg, nil
 }
 
 func isValidHashType(hashType string) bool {
