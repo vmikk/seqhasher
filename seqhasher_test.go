@@ -67,9 +67,10 @@ func TestParseFlags(t *testing.T) {
 	defer func() { flag.CommandLine = oldFlagCommandLine }()
 
 	tests := []struct {
-		name     string
-		args     []string
-		expected config
+		name           string
+		args           []string
+		expected       config
+		expectedErrMsg string
 	}{
 		{
 			name: "Default settings",
@@ -102,16 +103,34 @@ func TestParseFlags(t *testing.T) {
 				inputFileName: "input.fasta",
 			},
 		},
+		{
+			name:           "Invalid hash type",
+			args:           []string{"cmd", "-hash", "invalid,sha1", "input.fasta"},
+			expectedErrMsg: "Invalid hash type: invalid. Supported types are: sha1, sha3, md5, xxhash, cityhash, murmur3, nthash, blake3",
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 			os.Args = tt.args
-			cfg := parseFlags()
-			if !reflect.DeepEqual(cfg, tt.expected) {
-				t.Errorf("parseFlags() = %v, want %v", cfg, tt.expected)
-				failedTests = append(failedTests, "ParseFlags/"+tt.name)
+
+			cfg, err := parseFlags()
+
+			if tt.expectedErrMsg != "" {
+				if err == nil {
+					t.Errorf("Expected error, got nil")
+				} else if err.Error() != tt.expectedErrMsg {
+					t.Errorf("Expected error message %q, got %q", tt.expectedErrMsg, err.Error())
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Unexpected error: %v", err)
+				}
+				if !reflect.DeepEqual(cfg, tt.expected) {
+					t.Errorf("parseFlags() = %v, want %v", cfg, tt.expected)
+					failedTests = append(failedTests, "ParseFlags/"+tt.name)
+				}
 			}
 		})
 	}
