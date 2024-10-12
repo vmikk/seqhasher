@@ -117,10 +117,9 @@ func parseFlags() config {
 
 	// Parse hash types
 	cfg.hashTypes = strings.Split(hashTypesString, ",")
-	for i, ht := range cfg.hashTypes {
-		cfg.hashTypes[i] = strings.TrimSpace(ht)
-		if !isValidHashType(cfg.hashTypes[i]) {
-			log.Fatalf("Invalid hash type: %s. Supported types are: %s", cfg.hashTypes[i], strings.Join(supportedHashTypes, ", "))
+	for _, ht := range cfg.hashTypes {
+		if !isValidHashType(strings.TrimSpace(ht)) {
+			return config{}, fmt.Errorf("Invalid hash type: %s. Supported types are: %s", ht, strings.Join(supportedHashTypes, ", "))
 		}
 	}
 
