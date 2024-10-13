@@ -449,6 +449,7 @@ func TestAll(t *testing.T) {
 	t.Run("GetHashFunc", TestGetHashFunc)
 	t.Run("CompressedInput", TestCompressedInput)
 	t.Run("MainFunction", TestMainFunction)
+	t.Run("GetInputError", TestGetInputError)
 
 	// Check for test failures
 	if t.Failed() {
