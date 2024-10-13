@@ -450,6 +450,7 @@ func TestAll(t *testing.T) {
 	t.Run("CompressedInput", TestCompressedInput)
 	t.Run("MainFunction", TestMainFunction)
 	t.Run("GetInputError", TestGetInputError)
+	t.Run("GetOutputError", TestGetOutputError)
 
 	// Check for test failures
 	if t.Failed() {
