@@ -51,6 +51,12 @@ type config struct {
 	showVersion    bool
 }
 
+func main() {
+	if err := run(os.Stdout); err != nil {
+		log.Fatalf("%v", err)
+	}
+}
+
 func run(w io.Writer) error {
 	cfg, err := parseFlags()
 	if err != nil {
@@ -73,43 +79,17 @@ func run(w io.Writer) error {
 	}
 	defer input.Close()
 
-	return processSequences(input, w, cfg)
-}
-
-func main() {
-	cfg, err := parseFlags()
-	if err != nil {
-		log.Fatalf("%v", err)
-	}
-
-	if cfg.showVersion {
-		fmt.Printf("SeqHasher %s\n", version)
-		return
-	}
-
-	if cfg.inputFileName == "" {
-		printUsage(os.Stderr)
-		return
-	}
-
-	input, err := getInput(cfg.inputFileName)
-	if err != nil {
-		log.Fatalf("Error opening input: %v", err)
-	}
-	defer input.Close()
-
-	var output io.WriteCloser = os.Stdout
+	output := w
 	if cfg.outputFileName != "" && cfg.outputFileName != "-" {
-		output, err = getOutput(cfg.outputFileName)
+		outputFile, err := getOutput(cfg.outputFileName)
 		if err != nil {
-			log.Fatalf("Error opening output: %v", err)
+			return fmt.Errorf("Error opening output: %v", err)
 		}
-		defer output.Close()
+		defer outputFile.Close()
+		output = outputFile
 	}
 
-	if err := processSequences(input, output, cfg); err != nil {
-		log.Fatalf("Error processing sequences: %v", err)
-	}
+	return processSequences(input, output, cfg)
 }
 
 func parseFlags() (config, error) {
@@ -139,13 +119,8 @@ func parseFlags() (config, error) {
 	}
 	flag.Parse()
 
-	args := flag.Args()
-	if len(args) > 0 {
-		cfg.inputFileName = args[0]
-	}
-	if len(args) > 1 {
-		cfg.outputFileName = args[1]
-	}
+	cfg.inputFileName = flag.Arg(0)
+	cfg.outputFileName = flag.Arg(1)
 
 	// Parse hash types
 	cfg.hashTypes = strings.Split(hashTypesString, ",")
