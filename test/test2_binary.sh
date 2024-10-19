@@ -15,11 +15,25 @@ AAAA
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
-    echo "Basic usage test failed"
+
+# Test headers only
+function test_headers_only {
+  result=$(../seqhasher --headersonly test2.fasta -)
+  expected=$(cat <<EOF
+test2.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+test2.fasta;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+test2.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+EOF
+)
+  if [[ "$result" != "$expected" ]]; then
+    echo "Headers only test failed"
+    exit 1
+  fi  
+}
+
     exit 1
   fi
 }
 
 test_basic_usage
-
-echo "Test passed"
+test_headers_only
