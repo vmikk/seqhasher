@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# Initialize a variable to track test failures
+failed=0
+
 # Test basic usage
 function test_basic_usage {
   result=$(../seqhasher test2.fasta -)
@@ -15,6 +18,13 @@ AAAA
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
+    echo -e "\e[31mBasic usage test failed\e[0m"
+    failed=1
+  else
+    echo -e "\e[32mBasic usage test passed\e[0m"
+  fi
+}
+
 
 # Test headers only
 function test_headers_only {
@@ -81,3 +91,10 @@ test_headers_only
 test_no_filename
 test_xxhash_case_sensitive
 test_multiple_hashes
+if [[ $failed -eq 0 ]]; then
+  echo -e "\e[32mAll tests passed\e[0m"
+  exit 0
+else
+  echo -e "\e[31mSome tests failed\e[0m"
+  exit 1
+fi
