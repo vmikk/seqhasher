@@ -25,6 +25,25 @@ EOF
   fi
 }
 
+# Test custom name
+function test_custom_name {
+  result=$(../seqhasher --name "custom_name" test2.fasta -)
+  expected=$(cat <<EOF
+>custom_name;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+AAAA
+>custom_name;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+ACTG
+>custom_name;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+AAAA
+EOF
+)
+  if [[ "$result" != "$expected" ]]; then
+    echo -e "\e[31mCustom name test failed\e[0m"
+    failed=1
+  else
+    echo -e "\e[32mCustom name test passed\e[0m"
+  fi
+}
 
 # Test headers only
 function test_headers_only {
@@ -87,6 +106,7 @@ EOF
 }
 
 test_basic_usage
+test_custom_name
 test_headers_only
 test_no_filename
 test_xxhash_case_sensitive
