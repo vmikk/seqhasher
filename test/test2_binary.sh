@@ -31,9 +31,25 @@ EOF
   fi  
 }
 
+# Test no filename
+function test_no_filename {
+  result=$(../seqhasher --headersonly --nofilename test2.fasta -)
+  expected=$(cat <<EOF
+e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+EOF
+)
+  if [[ "$result" != "$expected" ]]; then
+    echo "No filename test failed"
+    exit 1
+  fi
+}
+
     exit 1
   fi
 }
 
 test_basic_usage
 test_headers_only
+test_no_filename
