@@ -46,6 +46,21 @@ EOF
   fi
 }
 
+# Test xxHash and case-sensitive
+function test_xxhash_case_sensitive {
+  result=$(../seqhasher --headersonly --nofilename --hash xxhash --casesensitive test2.fasta -)
+  expected=$(cat <<EOF  
+cf40b5b72bc43e77;seq1
+704b34bf20faedf2;seq2
+42a70d1abf84bf32;seq3
+EOF
+)
+  if [[ "$result" != "$expected" ]]; then
+    echo "xxHash and case-sensitive test failed"
+    exit 1
+  fi
+}
+
     exit 1
   fi
 }
@@ -53,3 +68,4 @@ EOF
 test_basic_usage
 test_headers_only
 test_no_filename
+test_xxhash_case_sensitive
