@@ -105,12 +105,33 @@ EOF
   fi
 }
 
+# Test compressed files
+function test_compressed_files {
+  for ext in bz2 gz xz zst; do
+    result=$(../seqhasher --headersonly --nofilename test2.fasta.$ext -)
+    expected=$(cat <<EOF
+e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
+65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
+e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
+EOF
+)
+    if [[ "$result" != "$expected" ]]; then
+      echo -e "\e[31mCompressed file test failed for .$ext\e[0m"
+      failed=1
+    else
+      echo -e "\e[32mCompressed file test passed for .$ext\e[0m"
+    fi
+  done
+}
+
 test_basic_usage
 test_custom_name
 test_headers_only
 test_no_filename
 test_xxhash_case_sensitive
 test_multiple_hashes
+test_compressed_files
+
 if [[ $failed -eq 0 ]]; then
   echo -e "\e[32mAll tests passed\e[0m"
   exit 0
