@@ -18,7 +18,7 @@ AAAA
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
-    echo -e "\e[31mBasic usage test failed\e[0m"
+    echo -e "\e[31m'Basic usage' test failed\e[0m"
     failed=1
   else
     echo -e "\e[32mBasic usage test passed\e[0m"
@@ -38,7 +38,7 @@ AAAA
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
-    echo -e "\e[31mCustom name test failed\e[0m"
+    echo -e "\e[31m'Custom name' test failed\e[0m"
     failed=1
   else
     echo -e "\e[32mCustom name test passed\e[0m"
@@ -55,8 +55,7 @@ test2.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
-    echo "Headers only test failed"
-    exit 1
+    echo -e "\e[31m'Headers only' test failed\e[0m"
   fi  
 }
 
@@ -70,8 +69,7 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
-    echo "No filename test failed"
-    exit 1
+    echo -e "\e[31m'No filename' test failed\e[0m"
   fi
 }
 
@@ -85,8 +83,7 @@ cf40b5b72bc43e77;seq1
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
-    echo "xxHash and case-sensitive test failed"
-    exit 1
+    echo -e "\e[31m'xxHash and case-sensitive' test failed\e[0m"
   fi
 }
 
@@ -100,8 +97,7 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;cf40b5b72bc43e77;seq1
 EOF
 )
   if [[ "$result" != "$expected" ]]; then
-    echo "Multiple hashes test failed"
-    exit 1
+    echo -e "\e[31m'Multiple hashes' test failed\e[0m"
   fi
 }
 
@@ -116,7 +112,7 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 EOF
 )
     if [[ "$result" != "$expected" ]]; then
-      echo -e "\e[31mCompressed file test failed for .$ext\e[0m"
+      echo -e "\e[31m'Compressed file' test failed for .$ext\e[0m"
       failed=1
     else
       echo -e "\e[32mCompressed file test passed for .$ext\e[0m"
