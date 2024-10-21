@@ -2,8 +2,9 @@
 
 set -euo pipefail
 
-# Initialize a variable to track test failures
+# Initialize variables to track test failures and total tests
 failed=0
+total_tests=0
 
 # Test basic usage
 function test_basic_usage {
@@ -17,11 +18,12 @@ ACTG
 AAAA
 EOF
 )
+  ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Basic usage' test failed\e[0m"
-    failed=1
+    ((failed++))
   else
-    echo -e "\e[32mBasic usage test passed\e[0m"
+    echo -e "\e[32m'Basic usage' test passed\e[0m"
   fi
 }
 
