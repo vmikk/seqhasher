@@ -39,11 +39,12 @@ ACTG
 AAAA
 EOF
 )
+  ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Custom name' test failed\e[0m"
-    failed=1
+    ((failed++))
   else
-    echo -e "\e[32mCustom name test passed\e[0m"
+    echo -e "\e[32m'Custom name' test passed\e[0m"
   fi
 }
 
@@ -56,8 +57,12 @@ test2.fasta;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2
 test2.fasta;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 EOF
 )
+  ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Headers only' test failed\e[0m"
+    ((failed++))
+  else
+    echo -e "\e[32m'Headers only' test passed\e[0m"
   fi  
 }
 
@@ -70,8 +75,12 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
 e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 EOF
 )
+  ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'No filename' test failed\e[0m"
+    ((failed++))
+  else
+    echo -e "\e[32m'No filename' test passed\e[0m"
   fi
 }
 
