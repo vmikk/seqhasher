@@ -149,9 +149,9 @@ test_multiple_hashes
 test_compressed_files
 
 if [[ $failed -eq 0 ]]; then
-  echo -e "\e[32mAll tests passed\e[0m"
+  echo -e "\e[32mAll $total_tests tests passed\e[0m"
   exit 0
 else
-  echo -e "\e[31mSome tests failed\e[0m"
+  echo -e "\e[31m$failed out of $total_tests tests failed\e[0m"
   exit 1
 fi
