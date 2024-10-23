@@ -93,8 +93,12 @@ cf40b5b72bc43e77;seq1
 42a70d1abf84bf32;seq3
 EOF
 )
+  ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'xxHash and case-sensitive' test failed\e[0m"
+    ((failed++))
+  else
+    echo -e "\e[32m'xxHash and case-sensitive' test passed\e[0m"
   fi
 }
 
@@ -107,8 +111,12 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;cf40b5b72bc43e77;seq1
 70c881d4a26984ddce795f6f71817c9cf4480e79;42a70d1abf84bf32;seq3  
 EOF
 )
+  ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Multiple hashes' test failed\e[0m"
+    ((failed++))
+  else
+    echo -e "\e[32m'Multiple hashes' test passed\e[0m"
   fi
 }
 
@@ -122,11 +130,12 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq1
 e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq3
 EOF
 )
+    ((total_tests++))
     if [[ "$result" != "$expected" ]]; then
       echo -e "\e[31m'Compressed file' test failed for .$ext\e[0m"
-      failed=1
+      ((failed++))
     else
-      echo -e "\e[32mCompressed file test passed for .$ext\e[0m"
+      echo -e "\e[32m'Compressed file' test passed for .$ext\e[0m"
     fi
   done
 }
