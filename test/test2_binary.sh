@@ -13,6 +13,10 @@ function test_basic_usage {
   ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Basic usage' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
     ((failed++))
   else
     echo -e "\e[32m'Basic usage' test passed\e[0m"
@@ -26,6 +30,10 @@ function test_custom_name {
   ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Custom name' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
     ((failed++))
   else
     echo -e "\e[32m'Custom name' test passed\e[0m"
@@ -39,6 +47,10 @@ function test_headers_only {
   ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Headers only' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
     ((failed++))
   else
     echo -e "\e[32m'Headers only' test passed\e[0m"
@@ -52,6 +64,10 @@ function test_no_filename {
   ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'No filename' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
     ((failed++))
   else
     echo -e "\e[32m'No filename' test passed\e[0m"
@@ -65,6 +81,10 @@ function test_xxhash_case_sensitive {
   ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'xxHash and case-sensitive' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
     ((failed++))
   else
     echo -e "\e[32m'xxHash and case-sensitive' test passed\e[0m"
@@ -78,6 +98,10 @@ function test_multiple_hashes {
   ((total_tests++))
   if [[ "$result" != "$expected" ]]; then
     echo -e "\e[31m'Multiple hashes' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
     ((failed++))
   else
     echo -e "\e[32m'Multiple hashes' test passed\e[0m"
@@ -92,6 +116,10 @@ function test_compressed_files {
     ((total_tests++))
     if [[ "$result" != "$expected" ]]; then
       echo -e "\e[31m'Compressed file' test failed for .$ext\e[0m"
+      echo -e "\nExpected:"
+      echo "$expected"
+      echo -e "\nObtained:"
+      echo "$result"
       ((failed++))
     else
       echo -e "\e[32m'Compressed file' test passed for .$ext\e[0m"
@@ -108,9 +136,9 @@ test_multiple_hashes
 test_compressed_files
 
 if [[ $failed -eq 0 ]]; then
-  echo -e "\e[32mAll $total_tests tests passed\e[0m"
+  echo -e "\e[32m\nAll $total_tests tests passed\e[0m"
   exit 0
 else
-  echo -e "\e[31m$failed out of $total_tests tests failed\e[0m"
+  echo -e "\e[31m\n$failed out of $total_tests tests failed\e[0m"
   exit 1
 fi
