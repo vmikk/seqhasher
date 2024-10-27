@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+echo -e "Testing seqhasher binary\n"
 
 # Initialize variables to track test failures and total tests
 failed=0
