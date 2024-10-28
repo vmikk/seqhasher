@@ -1,0 +1,28 @@
+name: Test SeqHasher binary
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.23
+        
+    - name: Build binary
+      run: go build -v -ldflags="-w -s" seqhasher.go
+
+    - name: Run tests
+      run: |
+        chmod +x test/test2_binary.sh
+        bash test/test2_binary.sh
