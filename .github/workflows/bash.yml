@@ -1,4 +1,4 @@
-name: Test SeqHasher binary
+name: Integration tests
 
 on:
   push:
