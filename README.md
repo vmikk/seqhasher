@@ -1,6 +1,7 @@
 # SeqHasher
 
 [![Go Test](https://github.com/vmikk/seqhasher/actions/workflows/go-test.yml/badge.svg)](https://github.com/vmikk/seqhasher/actions/workflows/go-test.yml)
+[![Integration Tests](https://github.com/vmikk/seqhasher/actions/workflows/bash.yml/badge.svg)](https://github.com/vmikk/seqhasher/actions/workflows/bash.yml)
 [![codecov](https://codecov.io/gh/vmikk/seqhasher/branch/main/graph/badge.svg)](https://codecov.io/gh/vmikk/seqhasher)
 
 ## Overview
