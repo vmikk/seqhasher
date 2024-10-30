@@ -232,8 +232,14 @@ func processSequences(input io.Reader, output io.Writer, cfg config) error {
 		}
 
 		seq := record.Seq.Seq
+
+		// Strip all whitespace characters from sequence before processing
+		// (as defined by Unicode's White Space property, which includes
+		// '\t', '\n', '\v', '\f', '\r', ' ', U+0085 (NEL), U+00A0 (NBSP)
+		seq = bytes.Join(bytes.Fields(seq), nil)
+
+		// Convert sequence to uppercase if case-insensitive hashing is enabled
 		if !cfg.caseSensitive {
-			// Convert sequence to uppercase if case-insensitive hashing is enabled
 			seq = bytes.ToUpper(seq)
 		}
 
