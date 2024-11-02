@@ -15,7 +15,7 @@
 - Supports reading from STDIN and writing to STDOUT
 - Option to output only headers or full sequences
 - Case-sensitive hashing option
-- Customizable output format (e.g., include filename in the header)
+- Customizable output format (e.g., include filename or a custom text string in the header)
 
 ## Quick start
 
