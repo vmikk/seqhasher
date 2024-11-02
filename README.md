@@ -210,7 +210,9 @@ hyperfine \
 
 `Values are in seconds per 500,000 sequences (756,622,201 bp)`
 
-As shown, xxHash and MurmurHash3 offer the best performance. 
+As shown, xxHash provides the best performance, followed by CityHash and MurmurHash3. 
+These hash functions produce relatively short hash fingerprints (64 and 128 bits, respectively). 
+In contrast, SHA-3 is the slowest hash function in this benchmark, generating the longest hash (512 bits).  
 
 > [!NOTE]
 > However, it's important to note that these values may depend on 
