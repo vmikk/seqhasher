@@ -127,6 +127,23 @@ function test_compressed_files {
   done
 }
 
+# Test whitespace stripping
+function test_whitespace_stripping {
+  result=$(../seqhasher --hash sha1 --nofilename seqs_with_spaces.fasta -)
+  expected=$(printf ">65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq1_uppercase\nACTG\n>65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq2_lowercase\nACTG\n>65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq3_mixed_case\nACTG\n>65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq4_with_spaces\nACTG\n>65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq5_with_tabs\nACTG\n>65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq6_with_newline\nACTG\n")
+  ((total_tests++))
+  if [[ "$result" != "$expected" ]]; then
+    echo -e "\e[31m'Whitespace stripping' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
+    ((failed++))
+  else
+    echo -e "\e[32m'Whitespace stripping' test passed\e[0m"
+  fi
+}
+
 test_basic_usage
 test_custom_name
 test_headers_only
@@ -134,6 +151,7 @@ test_no_filename
 test_xxhash_case_sensitive
 test_multiple_hashes
 test_compressed_files
+test_whitespace_stripping
 
 if [[ $failed -eq 0 ]]; then
   echo -e "\n\e[32mAll $total_tests tests passed\e[0m"
