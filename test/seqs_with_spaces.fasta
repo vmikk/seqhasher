@@ -1,0 +1,13 @@
+>seq1_uppercase
+ACTG
+>seq2_lowercase
+actg
+>seq3_mixed_case
+AcTg
+>seq4_with_spaces
+AC TG 
+>seq5_with_tabs
+AC	TG
+>seq6_with_newline
+AC
+TG
