@@ -124,7 +124,7 @@ Currently, the following hash functions are supported:
 
 > [!NOTE]
 > The probability of a collision (when different DNA sequences end up with the same hash) 
-> is roughly 1 in 2^nbits, where nbits is the length of the hash in bits. 
+> is roughly 1 in 2<sup>*nbits*</sup>, where *nbits* is the length of the hash in bits. 
 > This means that functions with shorter bit-lengths (e.g., `Murmur3` and `CityHash`) 
 > are more likely to have collisions as the dataset grows, 
 > while `SHA-3` has a much lower chance of collisions because of its larger bit length. 
