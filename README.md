@@ -153,8 +153,9 @@ we utilized [`hyperfine`](https://github.com/sharkdp/hyperfine).
 
 ### Test data
 
-First, let's create the test data: 
-a FASTA file containing 500,000 sequences, each 30 to 3000 nucleotides long.
+First, let's create the test data - 
+a FASTA file containing 500,000 sequences, each 30 to 3000 nucleotides long 
+(this should take a couple of minutes):  
 
 ```bash
 awk -v numSeq=500000 'BEGIN{
