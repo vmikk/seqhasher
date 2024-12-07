@@ -224,4 +224,10 @@ In contrast, SHA-3 is the slowest hash function in this benchmark, generating th
 > of the hash algorithms used in `seqhasher`. Other implementations may yield different results, 
 > and these values should not be interpreted as a definitive ranking of the algorithms themselves.
 
+## Known issues and limitations
+
+- Seqhasher does not take line wrapping in FASTA file into account (whitespace characters are stripped from the sequence before processing);
+- The tool may not work correctly with sequences containing non-ASCII characters;
+- IUPAC ambiguity codes (R,Y,S,W,K,M,B,D,H,V,N), characters denoting gaps ('-' or '.'), **and any other non-DNA characters** are handled "as is" (hash will depend on them);
+- Empty sequences return an empty hash;
 
