@@ -219,19 +219,7 @@ func processSequences(input io.Reader, output io.Writer, cfg config) error {
 	if err != nil {
 		return fmt.Errorf("Failed to create reader: %v", err)
 	}
-	defer reader.Close() // Close the reader after processing
-
-	inputFileName := cfg.inputFileName
-	if cfg.nameOverride != "" {
-		inputFileName = cfg.nameOverride
-	} else if inputFileName != "-" {
-		inputFileName = filepath.Base(inputFileName)
-	}
-
-	hashFuncs := make([]func([]byte) string, len(cfg.hashTypes))
-	for i, hashType := range cfg.hashTypes {
-		hashFuncs[i] = getHashFunc(hashType)
-	}
+	defer reader.Close()
 
 	for {
 		record, err := reader.Read()
@@ -253,31 +241,34 @@ func processSequences(input io.Reader, output io.Writer, cfg config) error {
 		if !cfg.caseSensitive {
 			seq = bytes.ToUpper(seq)
 		}
+		record.Seq.Seq = seq // Update the sequence in-place
 
-		var hashedSeqs []string
-		for _, hashFunc := range hashFuncs {
-			hashedSeqs = append(hashedSeqs, hashFunc(seq))
+		// Compute hashes
+		hashes := make([]string, 0, len(cfg.hashTypes))
+		for _, hashType := range cfg.hashTypes {
+			hashFunc := getHashFunc(hashType)
+			hashes = append(hashes, hashFunc(seq))
 		}
 
-		// Join all hashes
-		hashedSeq := strings.Join(hashedSeqs, ";")
-
-		// Prepare the new sequence header
-		var modifiedHeader string
+		// Modify header in-place
 		if cfg.noFileName {
-			modifiedHeader = fmt.Sprintf("%s;%s", hashedSeq, record.Name)
+			if len(hashes) > 0 {
+				record.Name = []byte(fmt.Sprintf("%s;%s", strings.Join(hashes, ";"), record.Name))
+			}
 		} else {
-			modifiedHeader = fmt.Sprintf("%s;%s;%s", inputFileName, hashedSeq, record.Name)
+			if len(hashes) > 0 {
+				record.Name = []byte(fmt.Sprintf("%s;%s;%s", inputFileName, strings.Join(hashes, ";"), record.Name))
+			} else {
+				record.Name = []byte(fmt.Sprintf("%s;%s", inputFileName, record.Name))
+			}
 		}
 
 		if cfg.headersOnly {
-			// Output only the header, without the '>' sign, if `--headersonly` is enabled
-			if _, err := fmt.Fprintf(writer, "%s\n", modifiedHeader); err != nil {
+			if _, err := fmt.Fprintf(writer, "%s\n", record.Name); err != nil {
 				return fmt.Errorf("Error writing header: %v", err)
 			}
 		} else {
-			// Output the full record
-			if _, err := fmt.Fprintf(writer, ">%s\n%s\n", modifiedHeader, seq); err != nil {
+			if _, err := writer.Write(record.Format(0)); err != nil {
 				return fmt.Errorf("Error writing record: %v", err)
 			}
 		}
