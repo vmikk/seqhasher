@@ -57,6 +57,10 @@ func main() {
 }
 
 func run(w io.Writer) error {
+
+	// Disable sequence validation
+	seq.ValidateSeq = false
+
 	cfg, err := parseFlags()
 	if err != nil {
 		return err
