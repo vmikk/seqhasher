@@ -9,6 +9,8 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/shenwei356/bio/seq"
 )
 
 const (
@@ -646,11 +648,21 @@ func TestProcessSequencesReaderCreationFailure(t *testing.T) {
 }
 
 func TestProcessSequencesInvalidSequence(t *testing.T) {
+	// Create a temporary test directory
+	tmpDir, err := os.MkdirTemp("", "seqhasher_test")
+	if err != nil {
+		t.Fatalf("Failed to create temp directory: %v", err)
+	}
+	defer os.RemoveAll(tmpDir)
+
 	runTest(t, "ProcessSequencesInvalidSequence", func(t *testing.T) {
 		logger := &testLogger{t}
 		logger.Logf(colorize(colorYellow, "Testing processSequences with invalid sequence"))
 
-		// Create an input with an invalid DNA sequence
+		// Disable sequence validation
+		seq.ValidateSeq = false
+
+		// Create an input with an "invalid" DNA sequence
 		invalidInput := strings.NewReader(">seq1\nACTGINVALID\n")
 
 		output := &bytes.Buffer{}
@@ -663,10 +675,14 @@ func TestProcessSequencesInvalidSequence(t *testing.T) {
 
 		err := processSequences(invalidInput, output, cfg)
 
-		if err == nil {
-			t.Error("Expected an error, but got nil")
-		} else if !strings.Contains(err.Error(), "invalid DNA letter") {
-			t.Errorf("Expected error message to contain 'invalid DNA letter', but got: %v", err)
+		// The sequence should be processed successfully since ValidateSeq is false
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+
+		expected := ">test.fasta;3e06752b63358c1a14c4c364513cbc2250674bb8;seq1\nACTGINVALID\n"
+		if got := output.String(); got != expected {
+			t.Errorf("Expected output:\n%s\nGot:\n%s", expected, got)
 		}
 	})
 }
