@@ -16,7 +16,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/shenwei356/bio/seq"
@@ -203,6 +202,14 @@ func printUsage(w io.Writer) {
 
 func processSequences(input io.Reader, output io.Writer, cfg config) error {
 	writer := bufio.NewWriter(output)
+	defer writer.Flush()
+
+	inputFileName := cfg.inputFileName
+	if cfg.nameOverride != "" {
+		inputFileName = cfg.nameOverride
+	} else if inputFileName == "-" {
+		cfg.noFileName = true // Skip filename for stdin unless overridden
+	}
 
 	reader, err := fastx.NewReaderFromIO(seq.DNA, bufio.NewReader(input), fastx.DefaultIDRegexp)
 	if err != nil {
