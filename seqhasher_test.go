@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"reflect"
 	"strings"
@@ -451,6 +452,9 @@ func TestAll(t *testing.T) {
 	t.Run("MainFunction", TestMainFunction)
 	t.Run("GetInputError", TestGetInputError)
 	t.Run("GetOutputError", TestGetOutputError)
+	t.Run("PrintUsage", TestPrintUsage)
+	t.Run("ProcessSequencesReaderCreationFailure", TestProcessSequencesReaderCreationFailure)
+	t.Run("ProcessSequencesInvalidSequence", TestProcessSequencesInvalidSequence)
 
 	// Check for test failures
 	if t.Failed() {
