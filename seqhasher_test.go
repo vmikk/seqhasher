@@ -551,28 +551,43 @@ func TestPrintUsage(t *testing.T) {
 
 		// Test regular usage
 		t.Run("RegularUsage", func(t *testing.T) {
-			var buf bytes.Buffer
-			printUsage(&buf)
-			output := buf.String()
-
-			// Check if usage information is printed
-			if !strings.Contains(output, "Usage:") || !strings.Contains(output, "Options:") {
-				t.Errorf("Expected usage information, got: %s", output)
-			}
-		})
-
-		// Test detailed help
-		t.Run("DetailedHelp", func(t *testing.T) {
-			// Save old args and set new ones
+			// Save old args and restore after test
 			oldArgs := os.Args
-			os.Args = []string{"cmd", "--help"}
+			os.Args = []string{"seqhasher"}
 			defer func() { os.Args = oldArgs }()
 
 			var buf bytes.Buffer
 			printUsage(&buf)
 			output := buf.String()
 
-			// Check if detailed help information is printed
+			// Check for expected content in regular usage
+			expectedStrings := []string{
+				"SeqHasher v",
+				"Usage: seqhasher [options]",
+				"Options:",
+				"Supported hash types:",
+				"If input_file is '-' or omitted, reads from stdin",
+			}
+
+			for _, str := range expectedStrings {
+				if !strings.Contains(output, str) {
+					t.Errorf("Expected usage output to contain '%s', but it was not found\nGot:\n%s", str, output)
+				}
+			}
+		})
+
+		// Test detailed help
+		t.Run("DetailedHelp", func(t *testing.T) {
+			// Save old args and restore after test
+			oldArgs := os.Args
+			os.Args = []string{"seqhasher", "--help"}
+			defer func() { os.Args = oldArgs }()
+
+			var buf bytes.Buffer
+			printUsage(&buf)
+			output := buf.String()
+
+			// Check for expected content in detailed help
 			expectedStrings := []string{
 				"SeqHasher",
 				"DNA Sequence Hashing Tool",
@@ -582,11 +597,12 @@ func TestPrintUsage(t *testing.T) {
 				"Options:",
 				"Arguments:",
 				"Examples:",
+				"https://github.com/vmikk/seqhasher",
 			}
 
 			for _, str := range expectedStrings {
 				if !strings.Contains(output, str) {
-					t.Errorf("Expected detailed help to contain '%s', but it was not found", str)
+					t.Errorf("Expected detailed help to contain '%s', but it was not found\nGot:\n%s", str, output)
 				}
 			}
 		})
