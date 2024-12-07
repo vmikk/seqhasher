@@ -608,3 +608,61 @@ func TestPrintUsage(t *testing.T) {
 		})
 	})
 }
+
+// failingReader is a custom io.Reader that always returns a simple string
+type failingReader struct{}
+
+func (fr failingReader) Read(p []byte) (n int, err error) {
+	copy(p, "invalid input")
+	return len("invalid input"), io.EOF
+}
+
+func TestProcessSequencesReaderCreationFailure(t *testing.T) {
+	runTest(t, "ProcessSequencesReaderCreationFailure", func(t *testing.T) {
+		logger := &testLogger{t}
+		logger.Logf(colorize(colorYellow, "Testing processSequences with reader creation failure"))
+
+		input := failingReader{}
+		output := &bytes.Buffer{}
+		cfg := config{
+			hashTypes:     []string{"sha1"},
+			noFileName:    false,
+			caseSensitive: false,
+			inputFileName: "test.fasta",
+		}
+
+		err := processSequences(input, output, cfg)
+
+		if err == nil {
+			t.Error("Expected an error, but got nil")
+		} else if !strings.Contains(err.Error(), "fastx: invalid FASTA/Q format") {
+			t.Errorf("Expected error message to contain 'fastx: invalid FASTA/Q format', but got: %v", err)
+		}
+	})
+}
+
+func TestProcessSequencesInvalidSequence(t *testing.T) {
+	runTest(t, "ProcessSequencesInvalidSequence", func(t *testing.T) {
+		logger := &testLogger{t}
+		logger.Logf(colorize(colorYellow, "Testing processSequences with invalid sequence"))
+
+		// Create an input with an invalid DNA sequence
+		invalidInput := strings.NewReader(">seq1\nACTGINVALID\n")
+
+		output := &bytes.Buffer{}
+		cfg := config{
+			hashTypes:     []string{"sha1"},
+			noFileName:    false,
+			caseSensitive: false,
+			inputFileName: "test.fasta",
+		}
+
+		err := processSequences(invalidInput, output, cfg)
+
+		if err == nil {
+			t.Error("Expected an error, but got nil")
+		} else if !strings.Contains(err.Error(), "invalid DNA letter") {
+			t.Errorf("Expected error message to contain 'invalid DNA letter', but got: %v", err)
+		}
+	})
+}
