@@ -144,6 +144,23 @@ function test_whitespace_stripping {
   fi
 }
 
+# Test FASTQ file
+function test_fastq_file {
+  result=$(cat test3.fastq | ../seqhasher - -)
+  expected=$(printf "@65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq1\nACTG\n+\nDFGH\n@e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq2\nAAAA\n+\nBBBB\n@e3da52abc8fbdb38b113a187ed0ac763fa86d1d4;seq3\nTGCA\n+\nEEEE\n")
+  ((total_tests++))
+  if [[ "$result" != "$expected" ]]; then
+    echo -e "\e[31m'FASTQ file' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
+    ((failed++))
+  else
+    echo -e "\e[32m'FASTQ file' test passed\e[0m"
+  fi
+}
+
 test_basic_usage
 test_custom_name
 test_headers_only
@@ -152,6 +169,7 @@ test_xxhash_case_sensitive
 test_multiple_hashes
 test_compressed_files
 test_whitespace_stripping
+test_fastq_file
 
 if [[ $failed -eq 0 ]]; then
   echo -e "\n\e[32mAll $total_tests tests passed\e[0m"
