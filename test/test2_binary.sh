@@ -144,6 +144,30 @@ function test_whitespace_stripping {
   fi
 }
 
+# Test long sequence (100k bases)
+function test_long_sequence {
+  # Generate a long sequence of repeating ACTG (50k bases)
+  long_seq1=$(printf 'ACTG%.0s' {1..25000})
+  long_seq2=$(printf 'A%.0s' {1..100000})
+  echo -e ">seq1\n$long_seq1\n>seq2\n$long_seq2" > test_long.fasta
+  
+  result=$(../seqhasher --headersonly --nofilename test_long.fasta -)
+  expected=$(printf "3200abf5034212fb5d90fa242fc1cea5e0f3dd00;seq1\ne27b41eb7f7370b36f1b2fa63f05652f52423277;seq2\n")
+  ((total_tests++))
+  if [[ "$result" != "$expected" ]]; then
+    echo -e "\e[31m'Long sequence' test failed\e[0m"
+    echo -e "\nExpected:"
+    echo "$expected"
+    echo -e "\nObtained:"
+    echo "$result"
+    ((failed++))
+  else
+    echo -e "\e[32m'Long sequence' test passed\e[0m"
+  fi
+  
+  rm test_long.fasta
+}
+
 # Test FASTQ file
 function test_fastq_file {
   result=$(cat test3.fastq | ../seqhasher - -)
@@ -169,6 +193,7 @@ test_xxhash_case_sensitive
 test_multiple_hashes
 test_compressed_files
 test_whitespace_stripping
+test_long_sequence
 test_fastq_file
 
 if [[ $failed -eq 0 ]]; then
