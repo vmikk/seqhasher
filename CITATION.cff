@@ -8,3 +8,5 @@ title: "SeqHasher: DNA Sequence Hashing Tool"
 version: 1.1.1
 date-released: 2024-12-08
 url: "https://github.com/vmikk/seqhasher"
+license: GPL-3.0
+repository-code: "https://github.com/vmikk/seqhasher"
