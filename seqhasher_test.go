@@ -485,6 +485,7 @@ func TestAll(t *testing.T) {
 		{"PrintUsage", TestPrintUsage},
 		{"ProcessSequencesReaderCreationFailure", TestProcessSequencesReaderCreationFailure},
 		{"ProcessSequencesInvalidSequence", TestProcessSequencesInvalidSequence},
+		{"ProcessFASTQSequences", TestProcessFASTQSequences},
 	}
 
 	// Write directly to the original stdout for our test output
@@ -631,10 +632,10 @@ func TestMainFunction(t *testing.T) {
 
 			// Check buffer output for non-file output tests
 			if tt.expectedOutput != "" {
-			output := buf.String()
-			if !strings.Contains(output, tt.expectedOutput) {
-				t.Errorf("Expected output to contain %q, got %q", tt.expectedOutput, output)
-			}
+				output := buf.String()
+				if !strings.Contains(output, tt.expectedOutput) {
+					t.Errorf("Expected output to contain %q, got %q", tt.expectedOutput, output)
+				}
 			}
 		})
 	}
@@ -825,4 +826,59 @@ func TestProcessSequencesInvalidSequence(t *testing.T) {
 			t.Errorf("Expected output:\n%s\nGot:\n%s", expected, got)
 		}
 	})
+}
+
+func TestProcessFASTQSequences(t *testing.T) {
+	logger := &testLogger{t}
+	tests := []struct {
+		name     string
+		cfg      config
+		input    string
+		expected string
+	}{
+		{
+			name: "Basic FASTQ processing",
+			cfg: config{
+				hashTypes:     []string{"sha1"},
+				noFileName:    false,
+				caseSensitive: false,
+				inputFileName: "test.fastq",
+			},
+			input: "@seq1\nACTG\n+\nDFGH\n@seq2\nAAAA\n+\nBBBB\n",
+			expected: "@test.fastq;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq1\nACTG\n+\nDFGH\n" +
+				"@test.fastq;e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq2\nAAAA\n+\nBBBB\n",
+		},
+		{
+			name: "FASTQ with headers only",
+			cfg: config{
+				headersOnly:   true,
+				hashTypes:     []string{"sha1"},
+				noFileName:    true,
+				caseSensitive: false,
+				inputFileName: "test.fastq",
+			},
+			input: "@seq1\nACTG\n+\nDFGH\n@seq2\nAAAA\n+\nBBBB\n",
+			expected: "65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq1\n" +
+				"e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;seq2\n",
+		},
+	}
+
+	for _, tt := range tests {
+		runTest(t, tt.name, func(t *testing.T) {
+			logger.Logf(colorize(colorYellow, "Testing FASTQ processing: %s"), tt.name)
+			input := strings.NewReader(tt.input)
+			output := &bytes.Buffer{}
+			err := processSequences(input, output, tt.cfg)
+			if err != nil {
+				t.Errorf("processSequences() error = %v", err)
+				return
+			}
+			got := output.String()
+			if got != tt.expected {
+				t.Errorf("\nProcessSequences failed for %s\nConfig: %+v\nGot:\n%s\nWant:\n%s",
+					tt.name, tt.cfg, got, tt.expected)
+				failedTests = append(failedTests, "ProcessFASTQSequences/"+tt.name)
+			}
+		})
+	}
 }
