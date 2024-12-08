@@ -5,11 +5,11 @@
 [![codecov](https://codecov.io/gh/vmikk/seqhasher/branch/main/graph/badge.svg)](https://codecov.io/gh/vmikk/seqhasher)
 
 ## Overview
-`seqhasher` is a high-performance command-line tool designed to calculate a hash (digest or fingerprint) for each sequence in a FASTA file and add it to the sequence header. It supports multiple hashing algorithms and offers various output options.
+`seqhasher` is a high-performance command-line tool designed to calculate a hash (digest or fingerprint) for each sequence in a FASTA or FASTQ file and add it to the sequence header. It supports multiple hashing algorithms and offers various output options.
 
 ## Features
 
-- Fast processing of FASTA files (thanks to [shenwei356/bio](https://github.com/shenwei356/bio) package)
+- Fast processing of FASTA/FASTQ files (thanks to [shenwei356/bio](https://github.com/shenwei356/bio) package)
 - Support for multiple hash algorithms: SHA-1, SHA-3, MD5, xxHash, CityHash, MurmurHash3, ntHash, and BLAKE3
 - Automatic support for compressed input files (`gzip`, `zstd`, `xz`, and `bzip2`)
 - Supports reading from STDIN and writing to STDOUT
