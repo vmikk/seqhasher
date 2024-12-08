@@ -574,6 +574,16 @@ func TestMainFunction(t *testing.T) {
 			args:           []string{"cmd", testFastaPath},
 			expectedOutput: ";seq1\n", // Check for processed sequence
 		},
+		{
+			name:           "Output to file",
+			args:           []string{"cmd", testFastaPath, "test_output.fasta"},
+			expectedOutput: "", // Output will be written to file instead of buffer
+		},
+		{
+			name:          "Output to invalid directory",
+			args:          []string{"cmd", testFastaPath, "/nonexistent/directory/output.fasta"},
+			expectedError: "Error opening output: open /nonexistent/directory/output.fasta: no such file or directory",
+		},
 	}
 
 	for _, tt := range tests {
@@ -603,11 +613,32 @@ func TestMainFunction(t *testing.T) {
 				t.Errorf("Unexpected error: %v", err)
 			}
 
-			// Check output
+			// For the "Output to file" test, verify the file contents
+			if tt.name == "Output to file" {
+				// Read the output file
+				content, err := os.ReadFile("test_output.fasta")
+				if err != nil {
+					t.Errorf("Failed to read output file: %v", err)
+				} else {
+					// Verify file contains expected content
+					if !strings.Contains(string(content), ";seq1\n") {
+						t.Errorf("Output file doesn't contain expected content")
+					}
+				}
+				// Clean up the output file
+				os.Remove("test_output.fasta")
+			}
+
+			// Check buffer output for non-file output tests
+			if tt.expectedOutput != "" {
 			output := buf.String()
 			if !strings.Contains(output, tt.expectedOutput) {
 				t.Errorf("Expected output to contain %q, got %q", tt.expectedOutput, output)
 			}
+			}
+		})
+	}
+
 	// Restore stdout if in silent mode
 	if silentMode {
 		w.Close()
