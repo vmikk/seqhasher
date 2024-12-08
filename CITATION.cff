@@ -6,6 +6,7 @@ authors:
   orcid: "https://orcid.org/0000-0003-2786-2690"
 title: "SeqHasher: DNA Sequence Hashing Tool"
 version: 1.1.1
+doi: 10.5281/zenodo.14311356
 date-released: 2024-12-08
 url: "https://github.com/vmikk/seqhasher"
 license: GPL-3.0
