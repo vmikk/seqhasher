@@ -434,37 +434,120 @@ func TestMain(m *testing.M) {
 	os.Exit(exitCode)
 }
 
-// Global slice to store names of failed tests
-var failedTests []string
+// Global variables
+var (
+	failedTests []string // Global slice to store names of failed tests
+	silentMode  bool     // Flag to control output in tests
+)
 
-// Initialize failedTests slice
+// Initialize global variables
 func init() {
 	failedTests = make([]string, 0)
+	silentMode = false
 }
 
 // TestAll runs all tests and captures failures
 func TestAll(t *testing.T) {
-	t.Run("ParseFlags", TestParseFlags)
-	t.Run("IsValidHashType", TestIsValidHashType)
-	t.Run("GetInput", TestGetInput)
-	t.Run("GetOutput", TestGetOutput)
-	t.Run("ProcessSequences", TestProcessSequences)
-	t.Run("GetHashFunc", TestGetHashFunc)
-	t.Run("CompressedInput", TestCompressedInput)
-	t.Run("MainFunction", TestMainFunction)
-	t.Run("GetInputError", TestGetInputError)
-	t.Run("GetOutputError", TestGetOutputError)
-	t.Run("PrintUsage", TestPrintUsage)
-	t.Run("ProcessSequencesReaderCreationFailure", TestProcessSequencesReaderCreationFailure)
-	t.Run("ProcessSequencesInvalidSequence", TestProcessSequencesInvalidSequence)
+	// Set silent mode for the duration of TestAll
+	silentMode = true
+	defer func() { silentMode = false }()
 
-	// Check for test failures
-	if t.Failed() {
-		failedTests = append(failedTests, t.Name())
+	// Save original stdout
+	oldStdout := os.Stdout
+
+	// Create a pipe to capture stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	// Create a channel to coordinate output restoration
+	done := make(chan bool)
+
+	// Start a goroutine to handle the piped output
+	go func() {
+		_, _ = io.Copy(io.Discard, r)
+		done <- true
+	}()
+
+	tests := []struct {
+		name     string
+		testFunc func(*testing.T)
+	}{
+		{"ParseFlags", TestParseFlags},
+		{"IsValidHashType", TestIsValidHashType},
+		{"GetInput", TestGetInput},
+		{"GetOutput", TestGetOutput},
+		{"ProcessSequences", TestProcessSequences},
+		{"GetHashFunc", TestGetHashFunc},
+		{"CompressedInput", TestCompressedInput},
+		{"MainFunction", TestMainFunction},
+		{"GetInputError", TestGetInputError},
+		{"GetOutputError", TestGetOutputError},
+		{"PrintUsage", TestPrintUsage},
+		{"ProcessSequencesReaderCreationFailure", TestProcessSequencesReaderCreationFailure},
+		{"ProcessSequencesInvalidSequence", TestProcessSequencesInvalidSequence},
+	}
+
+	// Write directly to the original stdout for our test output
+	fmt.Fprintf(oldStdout, "%s\n", colorize(colorYellow, "Running all test suites:"))
+
+	// Run each test
+	for _, tt := range tests {
+		testName := tt.name
+		t.Run(testName, func(t *testing.T) {
+			fmt.Fprintf(oldStdout, "%s %s\n",
+				colorize(colorYellow, "▶"),
+				colorize(colorYellow, "Running test suite: "+testName))
+
+			// Temporarily restore stdout for the test's own output capture
+			os.Stdout = w
+
+			// Run the actual test
+			tt.testFunc(t)
+
+			if !t.Failed() {
+				fmt.Fprintf(oldStdout, "%s %s\n",
+					colorize(colorGreen, "✓"),
+					colorize(colorGreen, "Test suite passed: "+testName))
+			} else {
+				fmt.Fprintf(oldStdout, "%s %s\n",
+					colorize(colorRed, "✗"),
+					colorize(colorRed, "Test suite failed: "+testName))
+				failedTests = append(failedTests, testName)
+			}
+		})
+	}
+
+	// Restore stdout
+	w.Close()
+	<-done
+	os.Stdout = oldStdout
+	r.Close()
+
+	// Print final summary
+	if len(failedTests) > 0 {
+		fmt.Fprintf(oldStdout, "\n%s\n", colorize(colorRed, "Some test suites failed:"))
+		for _, test := range failedTests {
+			fmt.Fprintf(oldStdout, "%s\n", colorize(colorRed, "- "+test))
+		}
+	} else {
+		fmt.Fprintf(oldStdout, "\n%s\n", colorize(colorGreen, "All test suites passed!"))
 	}
 }
 
 func TestMainFunction(t *testing.T) {
+	// Capture and discard output if in silent mode
+	var stdout *os.File
+	var w, r *os.File
+	if silentMode {
+		var err error
+		stdout = os.Stdout
+		r, w, err = os.Pipe()
+		if err != nil {
+			t.Fatal(err)
+		}
+		os.Stdout = w
+	}
+
 	tests := []struct {
 		name           string
 		args           []string
@@ -525,7 +608,12 @@ func TestMainFunction(t *testing.T) {
 			if !strings.Contains(output, tt.expectedOutput) {
 				t.Errorf("Expected output to contain %q, got %q", tt.expectedOutput, output)
 			}
-		})
+	// Restore stdout if in silent mode
+	if silentMode {
+		w.Close()
+		os.Stdout = stdout
+		io.Copy(io.Discard, r)
+		r.Close()
 	}
 }
 
@@ -551,6 +639,19 @@ func TestGetOutputError(t *testing.T) {
 }
 
 func TestPrintUsage(t *testing.T) {
+	// Capture and discard output if in silent mode
+	var stdout *os.File
+	var w, r *os.File
+	if silentMode {
+		var err error
+		stdout = os.Stdout
+		r, w, err = os.Pipe()
+		if err != nil {
+			t.Fatal(err)
+		}
+		os.Stdout = w
+	}
+
 	runTest(t, "PrintUsage", func(t *testing.T) {
 		logger := &testLogger{t}
 		logger.Logf(colorize(colorYellow, "Testing printUsage function"))
@@ -613,6 +714,14 @@ func TestPrintUsage(t *testing.T) {
 			}
 		})
 	})
+
+	// Restore stdout if in silent mode
+	if silentMode {
+		w.Close()
+		os.Stdout = stdout
+		io.Copy(io.Discard, r)
+		r.Close()
+	}
 }
 
 // failingReader is a custom io.Reader that always returns a simple string
