@@ -86,20 +86,22 @@ e2512172abf8cc9f67fdd49eb6cacf2df71bbad3;cf40b5b72bc43e77;seq1
 ## Usage
 
 ```plaintext
-seqhasher [--options] <input_file> [output_file]
+seqhasher [options] <input_file> [output_file]
 
 Options:
-  -n, --nofilename: Omit the file name from the sequence header
-  -f, --name: Replace the input file name in the header of the output with the specified text
-  -o, --headersonly: Only output sequence headers, excluding the sequences themselves
-  -H, --hash: Hash algorithm(s), multiple comma-separated values supported: sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, or blake3
-  -c, --casesensitive: Take into account sequence case. By default, sequences are converted to uppercase
-  -v, --version: Print the version of the program and exit
-  -h, --help: Show help message
+  -o, --headersonly   Output only sequence headers, excluding the sequences themselves
+  -H, --hash <type1,type2,...> Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3
+  -c, --casesensitive Take into account sequence case. By default, sequences are converted to uppercase
+  -n, --nofilename    Omit the file name from the sequence header
+  -f, --name <text>   Replace the input file's name in the header with <text>
+  -v, --version       Print the version of the program and exit
+  -h, --help          Show this help message and exit
 
 Arguments:
-  input_file: The path to the input FASTA file or '-' for standard input (stdin).
-  output_file: The path to the output file or '-' for standard output (stdout). This parameter is optional; if not provided, the output will be directed to stdout by default.
+  <input_file>     Path to the input FASTA/FASTQ file (supports gzip, zstd, xz, or bzip2 compression)
+                   or '-' for standard input (stdin)
+  [output_file]    Path to the output file or '-' for standard output (stdout)
+                   If omitted, output is sent to stdout.
 ```
 
 ### Description
