@@ -1,0 +1,9 @@
+>seq_with_numbers123
+AC TG123A
+>seq_with_non_dna_bases
+ACTGXYZ
+>seq_with_iupac_bases
+ACGTRYSWKMBDHVN
+>seq_special_chars
+AC!@#$%^&*()TG
+>seq_empty
