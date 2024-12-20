@@ -486,6 +486,7 @@ func TestAll(t *testing.T) {
 		{"ProcessSequencesReaderCreationFailure", TestProcessSequencesReaderCreationFailure},
 		{"ProcessSequencesInvalidSequence", TestProcessSequencesInvalidSequence},
 		{"ProcessFASTQSequences", TestProcessFASTQSequences},
+		{"FlagUsage", TestFlagUsage},
 	}
 
 	// Write directly to the original stdout for our test output
