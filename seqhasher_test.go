@@ -882,3 +882,57 @@ func TestProcessFASTQSequences(t *testing.T) {
 		})
 	}
 }
+
+func TestFlagUsage(t *testing.T) {
+	runTest(t, "FlagUsage", func(t *testing.T) {
+		// Save original stderr and create a pipe
+		oldStderr := os.Stderr
+		r, w, _ := os.Pipe()
+		os.Stderr = w
+
+		// Save original flag.CommandLine and args
+		oldFlagCommandLine := flag.CommandLine
+		oldArgs := os.Args
+
+		// Create new FlagSet and set up flags
+		flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+		os.Args = []string{"seqhasher"} // Reset args to avoid interference
+
+		// Set up the Usage function as done in parseFlags
+		flag.Usage = func() {
+			printUsage(os.Stderr)
+		}
+
+		// Call flag.Usage() which should trigger our custom printUsage
+		flag.Usage()
+
+		// Close writer and restore stderr
+		w.Close()
+		os.Stderr = oldStderr
+
+		// Read the output
+		var buf bytes.Buffer
+		io.Copy(&buf, r)
+		r.Close()
+
+		// Restore original flag.CommandLine and args
+		flag.CommandLine = oldFlagCommandLine
+		os.Args = oldArgs
+
+		// Verify the output contains expected content
+		output := buf.String()
+		expectedStrings := []string{
+			"SeqHasher v",
+			"Usage:",
+			"Options:",
+			"Supported hash types:",
+		}
+
+		for _, str := range expectedStrings {
+			if !strings.Contains(output, str) {
+				t.Errorf("Expected flag.Usage output to contain '%s', but it was not found\nGot:\n%s",
+					str, output)
+			}
+		}
+	})
+}
