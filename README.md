@@ -227,6 +227,14 @@ In contrast, SHA-3 is the slowest hash function in this benchmark, generating th
 > of the hash algorithms used in `seqhasher`. Other implementations may yield different results, 
 > and these values should not be interpreted as a definitive ranking of the algorithms themselves.
 
+
+## Installation
+
+### Pre-built binaries
+
+Download the latest release for your platform from the [Releases](https://github.com/vmikk/seqhasher/releases) page.
+
+
 ## Known issues and limitations
 
 - Seqhasher does not take line wrapping in FASTA file into account (whitespace characters are stripped from the sequence before processing);
