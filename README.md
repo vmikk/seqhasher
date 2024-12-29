@@ -234,6 +234,16 @@ In contrast, SHA-3 is the slowest hash function in this benchmark, generating th
 
 Download the latest release for your platform from the [Releases](https://github.com/vmikk/seqhasher/releases) page.
 
+### Building from source
+
+Ensure you have Go 1.23 or later [installed](https://go.dev/dl/).  
+Then, to install `seqhasher` v.1.1.1 run:
+
+``` bash
+git clone --depth 1 --branch 1.1.1 https://github.com/vmikk/seqhasher
+cd seqhasher
+go build -ldflags="-w -s" seqhasher.go
+```
 
 ## Known issues and limitations
 
