@@ -154,6 +154,10 @@ seqhasher --name 'Sample' - - < input.fasta > output.fasta
 To evaluate the performance of two solutions for processing DNA sequences, 
 we utilized [`hyperfine`](https://github.com/sharkdp/hyperfine).
 
+Benchmarks were performed on a system with the following specifications:
+- CPU: Intel Core i7-10510U (Comet Lake)
+- Storage: NVMe SSD
+
 ### Test data
 
 First, let's create the test data - 
