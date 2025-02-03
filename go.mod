@@ -1,6 +1,6 @@
 module github.com/vmikk/seqhasher
 
-go 1.21.6
+go 1.23.4
 
 require (
 	github.com/cespare/xxhash/v2 v2.3.0
