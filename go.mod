@@ -4,6 +4,7 @@ go 1.25.1
 
 require (
 	github.com/cespare/xxhash/v2 v2.3.0
+	github.com/cloudflare/circl v1.6.1
 	github.com/fatih/color v1.18.0
 	github.com/go-faster/city v1.0.1
 	github.com/shenwei356/bio v0.13.8
