@@ -11,7 +11,7 @@
 ## Features
 
 - Fast processing of FASTA/FASTQ files (thanks to [shenwei356/bio](https://github.com/shenwei356/bio) package)
-- Support for multiple hash algorithms: SHA-1, SHA-3, MD5, xxHash, CityHash, MurmurHash3, ntHash, and BLAKE3
+- Support for multiple hash algorithms: SHA-1, SHA-3, MD5, xxHash, CityHash, MurmurHash3, ntHash, BLAKE3, and KangarooTwelve (K12)
 - Automatic support for compressed input files (`gzip`, `zstd`, `xz`, and `bzip2`)
 - Supports reading from STDIN and writing to STDOUT
 - Option to output only headers or full sequences
@@ -91,7 +91,7 @@ seqhasher [options] <input_file> [output_file]
 
 Options:
   -o, --headersonly   Output only sequence headers, excluding the sequences themselves
-  -H, --hash <type1,type2,...> Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3
+  -H, --hash <type1,type2,...> Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3, k12
   -c, --casesensitive Take into account sequence case. By default, sequences are converted to uppercase
   -n, --nofilename    Omit the file name from the sequence header
   -f, --name <text>   Replace the input file's name in the header with <text>
@@ -124,6 +124,7 @@ Currently, the following hash functions are supported:
 - `murmur3`: [Murmur3](https://en.wikipedia.org/wiki/MurmurHash) (e.g., used in [Sourmash](https://github.com/sourmash-bio/sourmash), but 64-bit), 128-bit hash value
 - `nthash`: [ntHash](https://github.com/bcgsc/ntHash) (designed for DNA sequences), 64-bit hash value. This implementation uses the full length of the sequence as the k-mer size, effectively hashing the entire sequence at once using the non-canonical (forward) hash of the sequence
 - `blake3`: [BLAKE3](https://github.com/BLAKE3-team/BLAKE3) (fast cryptographic hash function), 256-bit hash value
+- `k12`: [KangarooTwelve](https://keccak.team/kangarootwelve.html) (Keccak-based extendable-output function \[XOF\]), 1024-bit hash value
 
 > [!NOTE]
 > The probability of a collision (when different DNA sequences end up with the same hash) 
