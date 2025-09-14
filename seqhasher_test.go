@@ -39,12 +39,12 @@ func (l *testLogger) Logf(format string, args ...interface{}) {
 
 func (l *testLogger) Errorf(format string, args ...interface{}) {
 	l.t.Helper()
-	l.t.Errorf(colorize(colorRed, fmt.Sprintf(format, args...)))
+	l.t.Errorf("%s", colorize(colorRed, fmt.Sprintf(format, args...)))
 }
 
 func (l *testLogger) Fatalf(format string, args ...interface{}) {
 	l.t.Helper()
-	l.t.Fatalf(colorize(colorRed, fmt.Sprintf(format, args...)))
+	l.t.Fatalf("%s", colorize(colorRed, fmt.Sprintf(format, args...)))
 }
 
 func runTest(t *testing.T, name string, testFunc func(*testing.T)) {
@@ -695,7 +695,7 @@ func TestPrintUsage(t *testing.T) {
 
 	runTest(t, "PrintUsage", func(t *testing.T) {
 		logger := &testLogger{t}
-		logger.Logf(colorize(colorYellow, "Testing printUsage function"))
+		logger.Logf("%s", colorize(colorYellow, "Testing printUsage function"))
 
 		// Test regular usage
 		t.Run("RegularUsage", func(t *testing.T) {
@@ -776,7 +776,7 @@ func (fr failingReader) Read(p []byte) (n int, err error) {
 func TestProcessSequencesReaderCreationFailure(t *testing.T) {
 	runTest(t, "ProcessSequencesReaderCreationFailure", func(t *testing.T) {
 		logger := &testLogger{t}
-		logger.Logf(colorize(colorYellow, "Testing processSequences with reader creation failure"))
+		logger.Logf("%s", colorize(colorYellow, "Testing processSequences with reader creation failure"))
 
 		input := failingReader{}
 		output := &bytes.Buffer{}
@@ -807,7 +807,7 @@ func TestProcessSequencesInvalidSequence(t *testing.T) {
 
 	runTest(t, "ProcessSequencesInvalidSequence", func(t *testing.T) {
 		logger := &testLogger{t}
-		logger.Logf(colorize(colorYellow, "Testing processSequences with invalid sequence"))
+		logger.Logf("%s", colorize(colorYellow, "Testing processSequences with invalid sequence"))
 
 		// Disable sequence validation
 		seq.ValidateSeq = false
