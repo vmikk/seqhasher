@@ -109,7 +109,7 @@ func TestParseFlags(t *testing.T) {
 		{
 			name:           "Invalid hash type",
 			args:           []string{"cmd", "-hash", "invalid,sha1", "input.fasta"},
-			expectedErrMsg: "Invalid hash type: invalid. Supported types are: sha1, sha3, md5, xxhash, cityhash, murmur3, nthash, blake3, k12",
+			expectedErrMsg: "Invalid hash type: invalid. Supported types are: sha1, sha3, md5, xxhash, xxh3, cityhash, murmur3, nthash, blake3, k12",
 		},
 	}
 
@@ -150,6 +150,7 @@ func TestIsValidHashType(t *testing.T) {
 		{"sha3", true},
 		{"md5", true},
 		{"xxhash", true},
+		{"xxh3", true},
 		{"cityhash", true},
 		{"murmur3", true},
 		{"nthash", true},
@@ -316,6 +317,7 @@ func TestGetHashFunc(t *testing.T) {
 		{"sha3", "01eb915e4d8b6d44d0432c12dfdb949c1da1f37c295a653b8761a1e46ed2d76cb0c297d612af809b9691d341cad536df912cbba6e95a93380cdc9f545d9bfdcc"},
 		{"md5", "86bfb9f78dd8b6cd35962bb7324fdbf8"},
 		{"xxhash", "704b34bf20faedf2"},
+		{"xxh3", "623952c8b43f0072"},
 		{"cityhash", "7ee08b0605f909cf400644ddb3b8b80b"},
 		{"murmur3", "da48f168029d0eff17c81eff7624a72f"},
 		{"nthash", "508876b331232519"},
