@@ -34,7 +34,7 @@ import (
 )
 
 const (
-	version         = "1.1.2" // Version of the program
+	version         = "1.2.0" // Version of the program
 	defaultHashType = "sha1"  // Default hash type
 )
 
