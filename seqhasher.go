@@ -29,6 +29,7 @@ import (
 
 	"github.com/fatih/color"
 	"github.com/will-rowe/nthash"
+	"github.com/cloudflare/circl/xof/k12"
 )
 
 const (
@@ -36,7 +37,7 @@ const (
 	defaultHashType = "sha1"  // Default hash type
 )
 
-var supportedHashTypes = []string{"sha1", "sha3", "md5", "xxhash", "cityhash", "murmur3", "nthash", "blake3"}
+var supportedHashTypes = []string{"sha1", "sha3", "md5", "xxhash", "cityhash", "murmur3", "nthash", "blake3", "k12"}
 
 // Configuration structure (flags)
 type config struct {
@@ -102,7 +103,7 @@ func parseFlags() (config, error) {
 	flag.BoolVar(&cfg.headersOnly, "o", false, "Output only headers (shorthand)")
 
 	var hashTypesString string
-	flag.StringVar(&hashTypesString, "hash", defaultHashType, "Hash type(s) (comma-separated: sha1, sha3, md5, xxhash, cityhash, murmur3, nthash, blake3)")
+	flag.StringVar(&hashTypesString, "hash", defaultHashType, "Hash type(s) (comma-separated: sha1, sha3, md5, xxhash, cityhash, murmur3, nthash, blake3, k12)")
 	flag.StringVar(&hashTypesString, "H", defaultHashType, "Hash type(s) (shorthand)")
 
 	flag.BoolVar(&cfg.noFileName, "nofilename", false, "Do not include file name in output")
@@ -175,7 +176,7 @@ func printUsage(w io.Writer) {
 		fmt.Fprintln(w, color.WhiteString("  For input/output via stdin/stdout, use '-' instead of the file name."))
 		fmt.Fprintln(w, color.HiCyanString("\nOptions:"))
 		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-o"), color.HiMagentaString("--headersonly"), color.WhiteString("  Output only sequence headers, excluding the sequences themselves"))
-		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-H"), color.HiMagentaString("--hash <type1,type2,...>"), color.WhiteString("Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3"))
+		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-H"), color.HiMagentaString("--hash <type1,type2,...>"), color.WhiteString("Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3, k12"))
 		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-c"), color.HiMagentaString("--casesensitive"), color.WhiteString("Take into account sequence case. By default, sequences are converted to uppercase"))
 		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-n"), color.HiMagentaString("--nofilename"), color.WhiteString("   Omit the file name from the sequence header"))
 		fmt.Fprintf(w, "  %s, %s %s\n", color.HiMagentaString("-f"), color.HiMagentaString("--name <text>"), color.WhiteString("  Replace the input file's name in the header with <text>"))
@@ -317,6 +318,12 @@ func getHashFunc(hashType string) func([]byte) string {
 		case "blake3":
 			hash := blake3.Sum256(data)
 			return hex.EncodeToString(hash[:])
+		case "k12":
+			x := k12.NewDraft10(nil)
+			_, _ = x.Write(data)
+			out := make([]byte, 128) // 128 bytes = 1024 bits
+			_, _ = x.Read(out)
+			return hex.EncodeToString(out)
 		default: // Default to SHA1
 			hash := sha1.Sum(data)
 			return hex.EncodeToString(hash[:])
