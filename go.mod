@@ -11,6 +11,7 @@ require (
 	github.com/spaolacci/murmur3 v1.1.0
 	github.com/will-rowe/nthash v0.4.0
 	github.com/zeebo/blake3 v0.2.4
+	github.com/zeebo/xxh3 v1.0.2
 	golang.org/x/crypto v0.42.0
 )
 
