@@ -9,6 +9,7 @@ require (
 	github.com/go-faster/city v1.0.1
 	github.com/shenwei356/bio v0.13.8
 	github.com/spaolacci/murmur3 v1.1.0
+	github.com/vkudryk/rapidhash-go v0.0.0-20250522125531-a03e5539e1bf
 	github.com/will-rowe/nthash v0.4.0
 	github.com/zeebo/blake3 v0.2.4
 	github.com/zeebo/xxh3 v1.0.2
