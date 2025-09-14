@@ -109,7 +109,7 @@ func TestParseFlags(t *testing.T) {
 		{
 			name:           "Invalid hash type",
 			args:           []string{"cmd", "-hash", "invalid,sha1", "input.fasta"},
-			expectedErrMsg: "Invalid hash type: invalid. Supported types are: sha1, sha3, md5, xxhash, xxh3, cityhash, murmur3, nthash, blake3, k12",
+			expectedErrMsg: "Invalid hash type: invalid. Supported types are: sha1, sha3, md5, xxhash, xxh3, cityhash, murmur3, nthash, blake3, k12, rapidhash, rapidhash32",
 		},
 	}
 
@@ -156,6 +156,8 @@ func TestIsValidHashType(t *testing.T) {
 		{"nthash", true},
 		{"blake3", true},
 		{"k12", true},
+		{"rapidhash", true},
+		{"rapidhash32", true},
 		{"invalid", false},
 		{"", false},
 	}
@@ -323,6 +325,8 @@ func TestGetHashFunc(t *testing.T) {
 		{"nthash", "508876b331232519"},
 		{"blake3", "fe31e49d18b8883e7167198f770b98bba33b533cc12a9bb63ab264e5b70a347a"},
 		{"k12", "9985653b7671edf4d1194c22886e3d1324c5ab28768c83e684387aea98c39ca0bceef0014d42ef5a3021b0686c5377529796e36401de254c977e14d59ca9d64ae567d568cd0f63f022a37b9678ac329d874860182f9e20fef9adeb0d3057c93b4f36386234798acfb94f469bee78baac64911e5ae1294db2b86aea32c5b3be12"},
+		{"rapidhash", "e5ba56a5fa8a1dcf"},
+		{"rapidhash32", "1f304b6a"},
 	}
 
 	for _, tt := range tests {
