@@ -11,7 +11,7 @@
 ## Features
 
 - Fast processing of FASTA/FASTQ files (thanks to [shenwei356/bio](https://github.com/shenwei356/bio) package)
-- Support for multiple hash algorithms: SHA-1, SHA-3, MD5, xxHash, CityHash, MurmurHash3, ntHash, BLAKE3, and KangarooTwelve (K12)
+- Support for multiple hash algorithms: SHA-1, SHA-3, MD5, xxHash, xxh3, CityHash, MurmurHash3, ntHash, BLAKE3, and KangarooTwelve (K12)
 - Automatic support for compressed input files (`gzip`, `zstd`, `xz`, and `bzip2`)
 - Supports reading from STDIN and writing to STDOUT
 - Option to output only headers or full sequences
@@ -91,7 +91,7 @@ seqhasher [options] <input_file> [output_file]
 
 Options:
   -o, --headersonly   Output only sequence headers, excluding the sequences themselves
-  -H, --hash <type1,type2,...> Hash algorithm(s): sha1 (default), sha3, md5, xxhash, cityhash, murmur3, nthash, blake3, k12
+  -H, --hash <type1,type2,...> Hash algorithm(s): sha1 (default), sha3, md5, xxhash, xxh3, cityhash, murmur3, nthash, blake3, k12
   -c, --casesensitive Take into account sequence case. By default, sequences are converted to uppercase
   -n, --nofilename    Omit the file name from the sequence header
   -f, --name <text>   Replace the input file's name in the header with <text>
@@ -119,7 +119,8 @@ Currently, the following hash functions are supported:
 - `sha1`: [SHA-1](https://en.wikipedia.org/wiki/SHA-1) (default), 160-bit hash value
 - `sha3`: [SHA-3](https://en.wikipedia.org/wiki/SHA-3), Keccak-based secure cryptographic hash standard, 512-bit hash value
 - `md5`: [MD5](https://en.wikipedia.org/wiki/MD5), 128-bit hash value
-- `xxhash`: [xxHash](https://xxhash.com/), extremely fast algorithm, 64-bit hash value
+- `xxhash`: [xxHash](https://xxhash.com/), fast non-cryptographic hash algorithm, 64-bit hash value
+- `xxh3`: [xxHash3](https://xxhash.com/), newer generation of xxHash with improved performance, 64-bit hash value
 - `cityhash`: [CityHash](https://opensource.googleblog.com/2011/04/introducing-cityhash.html) (e.g., used in [VSEARCH](https://github.com/torognes/vsearch/)), 128-bit hash value
 - `murmur3`: [Murmur3](https://en.wikipedia.org/wiki/MurmurHash) (e.g., used in [Sourmash](https://github.com/sourmash-bio/sourmash), but 64-bit), 128-bit hash value
 - `nthash`: [ntHash](https://github.com/bcgsc/ntHash) (designed for DNA sequences), 64-bit hash value. This implementation uses the full length of the sequence as the k-mer size, effectively hashing the entire sequence at once using the non-canonical (forward) hash of the sequence
