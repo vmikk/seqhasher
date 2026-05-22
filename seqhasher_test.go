@@ -493,6 +493,7 @@ func TestAll(t *testing.T) {
 		{"PrintUsage", TestPrintUsage},
 		{"ProcessSequencesReaderCreationFailure", TestProcessSequencesReaderCreationFailure},
 		{"ProcessSequencesInvalidSequence", TestProcessSequencesInvalidSequence},
+		{"ProcessFastaAfterFastq", TestProcessFastaAfterFastq},
 		{"ProcessFASTQSequences", TestProcessFASTQSequences},
 		{"FlagUsage", TestFlagUsage},
 	}
@@ -832,6 +833,48 @@ func TestProcessSequencesInvalidSequence(t *testing.T) {
 
 		expected := ">test.fasta;3e06752b63358c1a14c4c364513cbc2250674bb8;seq1\nACTGINVALID\n"
 		if got := output.String(); got != expected {
+			t.Errorf("Expected output:\n%s\nGot:\n%s", expected, got)
+		}
+	})
+}
+
+func TestProcessFastaAfterFastq(t *testing.T) {
+	runTest(t, "ProcessFastaAfterFastq", func(t *testing.T) {
+		fastqInput := strings.NewReader("@seq1\nACTG\n+\nDFGH\n@seq2\nAAAA\n+\nBBBB\n")
+		fastqOutput := &bytes.Buffer{}
+		fastqCfg := config{
+			hashTypes:     []string{"sha1"},
+			noFileName:    false,
+			caseSensitive: false,
+			inputFileName: "test.fastq",
+		}
+
+		if err := processSequences(fastqInput, fastqOutput, fastqCfg); err != nil {
+			t.Fatalf("processSequences() FASTQ error = %v", err)
+		}
+
+		fastaInput := strings.NewReader(">seq1\nACTG\n")
+		fastaOutput := &bytes.Buffer{}
+		fastaCfg := config{
+			hashTypes:     []string{"sha1"},
+			noFileName:    false,
+			caseSensitive: false,
+			inputFileName: "test.fasta",
+		}
+
+		if err := processSequences(fastaInput, fastaOutput, fastaCfg); err != nil {
+			t.Fatalf("processSequences() FASTA error = %v", err)
+		}
+
+		got := fastaOutput.String()
+		expected := ">test.fasta;65c89f59d38cdbf90dfaf0b0a6884829df8396b0;seq1\nACTG\n"
+		if !strings.HasPrefix(got, ">") {
+			t.Errorf("Expected FASTA output to start with '>', got:\n%s", got)
+		}
+		if strings.Contains(got, "\n+\n") {
+			t.Errorf("Expected FASTA output without a quality section, got:\n%s", got)
+		}
+		if got != expected {
 			t.Errorf("Expected output:\n%s\nGot:\n%s", expected, got)
 		}
 	})
