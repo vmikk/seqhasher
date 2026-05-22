@@ -22,16 +22,16 @@ import (
 	"github.com/shenwei356/bio/seqio/fastx"
 
 	"github.com/cespare/xxhash/v2"
-	"github.com/zeebo/xxh3"
-	"github.com/vkudryk/rapidhash-go"
 	"github.com/go-faster/city"
 	"github.com/spaolacci/murmur3"
+	"github.com/vkudryk/rapidhash-go"
 	"github.com/zeebo/blake3"
+	"github.com/zeebo/xxh3"
 	"golang.org/x/crypto/sha3"
 
+	"github.com/cloudflare/circl/xof/k12"
 	"github.com/fatih/color"
 	"github.com/will-rowe/nthash"
-	"github.com/cloudflare/circl/xof/k12"
 )
 
 const (
@@ -231,6 +231,11 @@ func processSequences(input io.Reader, output io.Writer, cfg config) error {
 				break
 			}
 			return fmt.Errorf("Error reading record: %v", err)
+		}
+		// fastx pools records; FASTA reads can inherit quality from a prior FASTQ read
+		if !reader.IsFastq {
+			record.Seq.Qual = nil
+			record.Seq.QualValue = nil
 		}
 
 		seq := record.Seq.Seq
